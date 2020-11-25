@@ -1,0 +1,102 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Starbucks Calorie Dataset Exercise
+
+Data on Calories in Starbucks drinks from kaggle
+
+# Necessary libraries
+
+```{r}
+library(tidyverse)
+```
+
+# 1. Import and get to know the Data
+
+```{r}
+starbucks_calories <- read_csv("data/starbucks_drinkMenu_expanded.csv")
+
+dim(starbucks_calories)
+
+names(starbucks_calories)
+
+glimpse(starbucks_calories)
+
+class(starbucks_calories)
+```
+
+Starbucks Calories is a dataframe containing 242 observations or rows and 18 variables.
+Starbucks Calories has variables containing information about each drink, its category and preparation style and its nutritional content including calories, sugar, fats, etc.
+Our percentage values have imported as character vectors as they have the percentage symbol in the field. The other numeric values are numbers and the descriptive fields are character vectors
+
+
+# 2. Investigating Calories
+
+Reduce data to look at specific columns using select, then check for NAs in the Calories column (none found)
+
+
+
+```{r}
+select(starbucks_calories, Beverage_category, Beverage, Beverage_prep, Calories)
+
+filter(starbucks_calories, is.na(Calories))
+```
+
+# 3. Find out which drinks have more calories than 10 cups of sugar
+
+10 cups of sugar = 135 calories, so we are exploring whether each drink has more or less than 135 calories. We'll store this in a column called calorie_diff. We'll say if each drink has more or less calories than 10 cups of sugar in a column called more_sugar_than_ten_cups
+
+```{r}
+starbucks_calories %>% 
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>%
+  mutate(calorie_diff = 135 - Calories) %>% 
+  mutate(more_sugar_than_ten_cups = calorie_diff > 0)
+```
+
+
+# 4. Exploring mean calories by beverage_category
+
+We will now group the drinks by the Beverage Category provided in the dataset and find the mean for each group.
+
+```{r}
+starbucks_calories %>% 
+  names()
+?summarise
+
+```
+
+```{r}
+starbucks_calories %>% 
+  group_by(Beverage_category) %>% 
+  # summarise, need to use mean function, but not enough time to figure out
+  summarise(n=n())
+```
+
+# Highest and Lowest Calories
+
+```{r}
+calories_ordered <- starbucks_calories %>% 
+  select(Beverage_category, Beverage, Beverage_prep, Calories) %>%
+  arrange(Calories)
+
+  head(starbucks_calories, 3)
+```
+
+
+```{r}
+tail (starbucks_calories, 3)
+```
+
+
+5 Question 5
+Let’s look at this a different way. What is the average number of calories in each Beverage_prep type?
+
+
+6 Question 6
+Which Beverage_prep type contains more than the average calories of all drinks?
+Hint: to answer this, you’ll have to first figure out what the average calories across all drinks are, and then use that as a filter for the grouped Beverage_prep data.
+
+7 Question 7
+Which is the best type of coffee drink to get if you’re worried about consuming too many calories?
