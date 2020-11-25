@@ -1,0 +1,103 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(CodeClanData)
+```
+
+
+```{r}
+new_coders <- read_csv("data/new_coders.csv")
+```
+
+# Sampling
+Taking a random set of data
+
+Sample_n - Sample by number
+
+```{r}
+new_coders %>% 
+  sample_n(5)
+```
+
+Sample_frac - Sample by proportion
+
+```{r}
+new_coders %>% 
+  sample_frac(0.01)
+```
+
+# Distinct
+
+Keep just the ones you called
+
+```{r}
+new_coders %>% 
+  distinct (age, gender)
+```
+
+Keep all values
+
+```{r}
+new_coders %>% 
+  distinct (age, gender, .keep_all = TRUE)
+```
+
+# Slicing
+
+Subsetting by position not value
+
+First 5
+
+```{r}
+new_coders %>% 
+  slice(1:5)
+```
+
+2nd, 3rd, 5th and 10th
+
+```{r}
+new_coders %>% 
+  slice(c(2,3,5,10))
+```
+
+Slice using group by will give you a slice from each of the variables we group by
+
+```{r}
+new_coders %>% 
+  group_by(job_pref) %>% 
+  slice (1:5)
+```
+
+# Slice min and max
+
+Select the minimum and maximum rows for the columns selected
+
+```{r}
+new_coders %>% 
+  slice_max(last_yr_income, n =5)
+```
+
+```{r}
+new_coders %>% 
+  slice_min(last_yr_income, n = 5)
+```
+
+But this brings the all the rows containing the 5 lowest values.
+
+```{r}
+new_coders %>% 
+  slice_min(last_yr_income, n = 5, with_ties = FALSE)
+```
+
+We can use slice min and max with group by
+
+```{r}
+new_coders %>% 
+  group_by(job_pref) %>% 
+  slice_max(expected_earn, n=1, with_ties = FALSE)
+```
+
