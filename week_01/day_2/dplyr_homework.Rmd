@@ -70,8 +70,7 @@ starbucks_calories %>%
 ```{r}
 starbucks_calories %>% 
   group_by(Beverage_category) %>% 
-  # summarise, need to use mean function, but not enough time to figure out
-  summarise(n=n())
+  summarise(mean_calories = mean(Calories), n=n())
 ```
 
 # Highest and Lowest Calories
@@ -89,14 +88,51 @@ calories_ordered <- starbucks_calories %>%
 tail (starbucks_calories, 3)
 ```
 
+# 5. Average number of calories in each Beverage Prep Category
 
-5 Question 5
-Let’s look at this a different way. What is the average number of calories in each Beverage_prep type?
+```{r}
+starbucks_calories %>% 
+  group_by(Beverage_prep) %>% 
+  summarise(mean_calories = mean(Calories), n=n())
+```
+
+# 6. Which Beverage Prep contains more than the average calories of all drinks?
+
+Find the mean for all drinks using summarise.
+
+```{r}
+mean_calories <-
+  starbucks_calories %>% 
+  summarise(calories = mean(Calories))
+```
+
+Mean of all drinks = 193.871, now stored as the variable mean_calories.
+
+Then create a new column called more_than_average which returns TRUE if Calories 
+
+```{r}
+calories_ordered %>% 
+  group_by(Beverage_prep) %>% 
+#   mutate(more_than_average = (Calories - mean_calories) <= 0)
+  mutate(more_than_average = Calories > pull(mean_calories))  
+```
 
 
-6 Question 6
-Which Beverage_prep type contains more than the average calories of all drinks?
-Hint: to answer this, you’ll have to first figure out what the average calories across all drinks are, and then use that as a filter for the grouped Beverage_prep data.
+# 7. Which is the best type of coffee drink to get if you’re worried about consuming too many calories?
 
-7 Question 7
-Which is the best type of coffee drink to get if you’re worried about consuming too many calories?
+Find out which beverage types have the lowest average calories
+
+```{r}
+starbucks_calories %>% 
+  group_by(Beverage_prep) %>% 
+  summarise(mean_calories = mean(Calories), n=n()) %>% 
+  arrange(mean_calories) %>% 
+  head(10)
+```
+
+If you are worried about your calory consumption, you are best off drinking from the Solo, Doppio and Short range because these are the 3 beverage types with the lowest average calories.
+These are all categories which describe the size of drink so this implies that the smaller your drink the less calories you will be taking in.
+When we look at the 10 beverage types with the lowest we see that nonfat milk appears 3 times, so we can also recommend that you use nonfat milk in whatever drink you choose.
+
+
+
