@@ -1815,20 +1815,6 @@ summary {
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
 <pre class="r"><code>library(tidyverse)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmVnaXN0ZXJlZCBTMyBtZXRob2RzIG92ZXJ3cml0dGVuIGJ5ICdkYnBseXInOlxuICBtZXRob2QgICAgICAgICBmcm9tXG4gIHByaW50LnRibF9sYXp5ICAgICBcbiAgcHJpbnQudGJsX3NxbCAgICAgIFxu4pSA4pSAIEF0dGFjaGluZyBwYWNrYWdlcyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAgdGlkeXZlcnNlIDEuMy4wIOKUgOKUgFxu4pyTIGdncGxvdDIgMy4zLjIgICAgIOKckyBwdXJyciAgIDAuMy40XG7inJMgdGliYmxlICAzLjAuNCAgICAg4pyTIGRwbHlyICAgMS4wLjJcbuKckyB0aWR5ciAgIDEuMS4yICAgICDinJMgc3RyaW5nciAxLjQuMFxu4pyTIHJlYWRyICAgMS40LjAgICAgIOKckyBmb3JjYXRzIDAuNS4wXG5wYWNrYWdlIOKAmGdncGxvdDLigJkgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjYuMnBhY2thZ2Ug4oCYdGliYmxl4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjJwYWNrYWdlIOKAmHRpZHly4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjJwYWNrYWdlIOKAmHJlYWRy4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjJwYWNrYWdlIOKAmHB1cnJy4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjJwYWNrYWdlIOKAmGRwbHly4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gMy42LjLilIDilIAgQ29uZmxpY3RzIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgCB0aWR5dmVyc2VfY29uZmxpY3RzKCkg4pSA4pSAXG54IGRwbHlyOjpmaWx0ZXIoKSBtYXNrcyBzdGF0czo6ZmlsdGVyKClcbnggZHBseXI6OmxhZygpICAgIG1hc2tzIHN0YXRzOjpsYWcoKVxuIn0= -->
-<pre><code>Registered S3 methods overwritten by &#39;dbplyr&#39;:
-  method         from
-  print.tbl_lazy     
-  print.tbl_sql      
-── Attaching packages ────────────────────────────────── tidyverse 1.3.0 ──
-✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-✓ tibble  3.0.4     ✓ dplyr   1.0.2
-✓ tidyr   1.1.2     ✓ stringr 1.4.0
-✓ readr   1.4.0     ✓ forcats 0.5.0
-package ‘ggplot2’ was built under R version 3.6.2package ‘tibble’ was built under R version 3.6.2package ‘tidyr’ was built under R version 3.6.2package ‘readr’ was built under R version 3.6.2package ‘purrr’ was built under R version 3.6.2package ‘dplyr’ was built under R version 3.6.2── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
-x dplyr::filter() masks stats::filter()
-x dplyr::lag()    masks stats::lag()</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -1836,25 +1822,6 @@ x dplyr::lag()    masks stats::lag()</code></pre>
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW92aWVzIDwtIHJlYWRfY3N2KFwiZGF0YS9tb3ZpZXMuY3N2XCIpXG5gYGAifQ== -->
 <pre class="r"><code>movies &lt;- read_csv(&quot;data/movies.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5jb2xzKFxuICBvcmlnaW5hbF90aXRsZSA9IGNvbF9jaGFyYWN0ZXIoKSxcbiAgdGl0bGUgPSBjb2xfY2hhcmFjdGVyKCksXG4gIGhvbWVwYWdlID0gY29sX2NoYXJhY3RlcigpLFxuICBidWRnZXQgPSBjb2xfZG91YmxlKCksXG4gIG9yaWdpbmFsX2xhbmd1YWdlID0gY29sX2NoYXJhY3RlcigpLFxuICBvdmVydmlldyA9IGNvbF9jaGFyYWN0ZXIoKSxcbiAgcG9wdWxhcml0eSA9IGNvbF9kb3VibGUoKSxcbiAgcmVsZWFzZV9kYXRlID0gY29sX2NoYXJhY3RlcigpLFxuICByZXZlbnVlID0gY29sX2RvdWJsZSgpLFxuICBydW50aW1lID0gY29sX2RvdWJsZSgpLFxuICB0YWdsaW5lID0gY29sX2NoYXJhY3RlcigpLFxuICB2b3RlX2F2ZXJhZ2UgPSBjb2xfZG91YmxlKCksXG4gIHZvdGVfY291bnQgPSBjb2xfZG91YmxlKClcbilcbiJ9 -->
-<pre><code>
-── Column specification ───────────────────────────────────────────────────
-cols(
-  original_title = col_character(),
-  title = col_character(),
-  homepage = col_character(),
-  budget = col_double(),
-  original_language = col_character(),
-  overview = col_character(),
-  popularity = col_double(),
-  release_date = col_character(),
-  revenue = col_double(),
-  runtime = col_double(),
-  tagline = col_character(),
-  vote_average = col_double(),
-  vote_count = col_double()
-)</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <div id="how-could-we-clean-this-data" class="section level1">
@@ -1862,36 +1829,10 @@ cols(
 <p>We could assign release_date to a numeric value for easier analysis?</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2xpbXBzZShtb3ZpZXMpXG5gYGAifQ== -->
-<pre class="r"><code>glimpse(movies)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2xpbXBzZShtb3ZpZXMpXG5oZWFkKG1vdmllcylcbmBgYCJ9 -->
+<pre class="r"><code>glimpse(movies)
+head(movies)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNCw4MDNcbkNvbHVtbnM6IDEzXG4kIG9yaWdpbmFsX3RpdGxlICAgIDxjaHI+IFwiQXZhdGFyXCIsIFwiUGlyYXRlcyBvZiB0aGUgQ2FyaWJiZWFuOiBBdCBXb3JsZCfigKZcbiQgdGl0bGUgICAgICAgICAgICAgPGNocj4gXCJBdmF0YXJcIiwgXCJQaXJhdGVzIG9mIHRoZSBDYXJpYmJlYW46IEF0IFdvcmxkJ+KAplxuJCBob21lcGFnZSAgICAgICAgICA8Y2hyPiBcImh0dHA6Ly93d3cuYXZhdGFybW92aWUuY29tL1wiLCBcImh0dHA6Ly9kaXNuZXku4oCmXG4kIGJ1ZGdldCAgICAgICAgICAgIDxkYmw+IDIuMzdlKzA4LCAzLjAwZSswOCwgMi40NWUrMDgsIDIuNTBlKzA4LCAyLjYwZSvigKZcbiQgb3JpZ2luYWxfbGFuZ3VhZ2UgPGNocj4gXCJlblwiLCBcImVuXCIsIFwiZW5cIiwgXCJlblwiLCBcImVuXCIsIFwiZW5cIiwgXCJlblwiLCBcImVuXCLigKZcbiQgb3ZlcnZpZXcgICAgICAgICAgPGNocj4gXCJJbiB0aGUgMjJuZCBjZW50dXJ5LCBhIHBhcmFwbGVnaWMgTWFyaW5lIGlzIGTigKZcbiQgcG9wdWxhcml0eSAgICAgICAgPGRibD4gMTUwLjQzNzU4LCAxMzkuMDgyNjIsIDEwNy4zNzY3OSwgMTEyLjMxMjk1LCA0M+KAplxuJCByZWxlYXNlX2RhdGUgICAgICA8Y2hyPiBcIjEwLzEyLzIwMDlcIiwgXCIxOS8wNS8yMDA3XCIsIFwiMjYvMTAvMjAxNVwiLCBcIjE2L+KAplxuJCByZXZlbnVlICAgICAgICAgICA8ZGJsPiAyNzg3OTY1MDg3LCA5NjEwMDAwMDAsIDg4MDY3NDYwOSwgMTA4NDkzOTA5OSwg4oCmXG4kIHJ1bnRpbWUgICAgICAgICAgIDxkYmw+IDE2MiwgMTY5LCAxNDgsIDE2NSwgMTMyLCAxMzksIDEwMCwgMTQxLCAxNTMsIDHigKZcbiQgdGFnbGluZSAgICAgICAgICAgPGNocj4gXCJFbnRlciB0aGUgV29ybGQgb2YgUGFuZG9yYS5cIiwgXCJBdCB0aGUgZW5kIG9mIOKAplxuJCB2b3RlX2F2ZXJhZ2UgICAgICA8ZGJsPiA3LjIsIDYuOSwgNi4zLCA3LjYsIDYuMSwgNS45LCA3LjQsIDcuMywgNy40LCA14oCmXG4kIHZvdGVfY291bnQgICAgICAgIDxkYmw+IDExODAwLCA0NTAwLCA0NDY2LCA5MTA2LCAyMTI0LCAzNTc2LCAzMzMwLCA2NzbigKZcbiJ9 -->
-<pre><code>Rows: 4,803
-Columns: 13
-$ original_title    &lt;chr&gt; &quot;Avatar&quot;, &quot;Pirates of the Caribbean: At World&#39;…
-$ title             &lt;chr&gt; &quot;Avatar&quot;, &quot;Pirates of the Caribbean: At World&#39;…
-$ homepage          &lt;chr&gt; &quot;http://www.avatarmovie.com/&quot;, &quot;http://disney.…
-$ budget            &lt;dbl&gt; 2.37e+08, 3.00e+08, 2.45e+08, 2.50e+08, 2.60e+…
-$ original_language &lt;chr&gt; &quot;en&quot;, &quot;en&quot;, &quot;en&quot;, &quot;en&quot;, &quot;en&quot;, &quot;en&quot;, &quot;en&quot;, &quot;en&quot;…
-$ overview          &lt;chr&gt; &quot;In the 22nd century, a paraplegic Marine is d…
-$ popularity        &lt;dbl&gt; 150.43758, 139.08262, 107.37679, 112.31295, 43…
-$ release_date      &lt;chr&gt; &quot;10/12/2009&quot;, &quot;19/05/2007&quot;, &quot;26/10/2015&quot;, &quot;16/…
-$ revenue           &lt;dbl&gt; 2787965087, 961000000, 880674609, 1084939099, …
-$ runtime           &lt;dbl&gt; 162, 169, 148, 165, 132, 139, 100, 141, 153, 1…
-$ tagline           &lt;chr&gt; &quot;Enter the World of Pandora.&quot;, &quot;At the end of …
-$ vote_average      &lt;dbl&gt; 7.2, 6.9, 6.3, 7.6, 6.1, 5.9, 7.4, 7.3, 7.4, 5…
-$ vote_count        &lt;dbl&gt; 11800, 4500, 4466, 9106, 2124, 3576, 3330, 676…</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGVhZChtb3ZpZXMpXG5gYGAifQ== -->
-<pre class="r"><code>head(movies)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6MTN9LCJyZGYiOiJINHNJQUFBQUFBQUFBOVZYVDR4a1JSbnZuV1YyWWR4bFZTUm9GazFGU0VEczZaNmRrVVc0MkRNN0RjS3lNTmtaWEdJMldlcTk5M1YzTWU5VlBhcnFkVy9qWmE0bW50UURlRUFNR28wdUNoZk9jQ0FLQVRRY0NONlVjQ1RSY09EZ1lkZmZWKzlWVCsvRWcvSG1TMmJxMzFmZm45LzNyL3I4NXBOclMwOHV0VnF0dzYzRFIvQi9FZFBXNGhNN0R5NS91OVc2WVFHTFE2MGJXamZ4ZUJuSHQyQnlISCtmeDkrUjV1REkrbGg2YVp2VjNWdktTazlPbUlId0l4Sm5wRlZKUWxJL0lOYTl1R0JzbnQzbFJGOW5EZjNSN1pKU2I2bFozcnFETzV2UzdvcXpXZzFIWHB4WGpseHorTGxIekVnelIwOVIzTEh0VW1Wa2w4OUpMZGIrWHhRN09mSytmS0RiblV3bUhSbDBMTXhZVVNjMVJiY2hhVGNrbVhLYXBwMmhDWWYxcWxTcHJ5eTVibGxiRk85OGM0NnRNM3BHRjY0R0NhN3JhcVBpbGEvUFhRRW9HZXpiRGVaWnRtNWVvVHNieXBwUHA5R0xDWjZHN2N2cHZPM2QvMHFSQUU4aDlWb1hWMjRPL3JyUysrMGVKdXV2L3YwbGpzUDFsNy8xWGxpLy9DNkY5ZSt2L3JnZTMvaGhxLzdtWVYwZy9UL01ydWZ4aDRkMWlJN1ZWWjJKbERUMG5yYUZGS1cwc3N4cHFGSnhEb0dqU1NnbkFFSXBmUXJjaERmaFdtR01GbHRTWjhaS2dha1VsVmJQVkRoUXppbWoyeUtwdkVnSVFDQVN2YkVhQ3o4aDBtSmc4dHhNbEI0S1k0R01FK0FpU21zOEhNYTdpQ09aS3hDbWFxeHk5YXowNE5kcDFIN2xqQ3k5VkZwc1NKc1k1MlJiNUFhWEVzS1ZjYTFmUWlJam1iWEZTRHJCQ29oRXBydDhrcXNCQlhHd2FRU1NmWHNvRzFKTW1ENWNQQklUaFg4WFZKNkxuY3Bxc3VGZW4vV0JJU094UFpGYWQ4UUdyTlRHajFoeE1IMm1VaDRTbkZCZU9LTENkVnF0UGRiNzAzV1IybW5wQVNzQWNSTFNCdFlVWXNQbzdLTzk1eDF3ZDN4Rlo5Qk1GVFdrM2txVnM0YVZUczJZVlJCT2FlVVFnTUJ1S0hVRVIxd1lxWnpFT1JqcWZRN0FTNU1yeUpJNTBMWnA4SURZSlNxRGZZNVNTeXpNamxWS0RQYVkya0VUVVJMbHJvRUxsTG1jc29PQVMwWXB3U2F3c1lBWmZQa1llcUMwUUxDM0ZTQkpDREJrWW51cmYyYm5mTC94MktFckQ4Nzh6WGZnR1pDQzR5YnNzTWdYRkNVT0Q1cUs3MG83eHJDSllJUTYwaGNjQ2M1VkhFRklxdEpvcHhKRWhKK3lWWUVPaFN5MXFnNnhHRU9ONXV5SGh2TmRmTCtzZkFBcit0OVZpU05FclBiNVZJd3E3UkVNeVRSY2ZnZ09sWVU0dzVLMmdDUkEyaVFraGk5QTNSSDlVQmFuSkFFTnk3RXpiUWwrWWs0NENFa3laVmNwVXpteGpmalVVcHlkNW5VQThqR2lPMGNvOC9HRzFNVFpwMmtTVURVb1MxN2tIS0pXVEVaR3NQc25JOG9MMTJnSG13YklUZ2Q5RGhac1lGWFpnVXl2UjBVaW56emJKMzFJak1SQ0Q5ak0wUlpVcDJJYWZmYTl1VExQV0VreGtYWjVBb3RSSTRCOWdlMkNQWUVOa1RZWkNUV2hGSFM2WEFJeW1RQldCTENHMzZ5Zkt4ejdtREFPZE5sd1RwUTVBUEFjRnNoclo1QVlkNlA2dUc4RUdrdDVsWG9aSEJVckNoV0pOWWg1dUZJSDlWRjZrZXQ2QU5HQTVHR09ER2pOelk1emlTVW5xR2E3TENKRlFNclNNZURnM2xocENVVXVaQmtuSVA0cU9KUUJBK29heFFJRVNKUm5xZllzQUI2ck1kSmdUdU1RVng2NVJ3WUZsTDNnR1k2YUd3NWpMVGgweDA1SVFpcVFFekJKNmJIU2FjaWp1Vlk2TkJCVmxVSU9nUzFpSVZURmZKa0RKTFdtWk1GTi9JaVA5bjRDSm1sZVpUSEozRWlXdE94R2FoQXE2amFrdzVwWUp2YWxoTXJqcXBKc2FTYWhGRnV1QjhDalRvWlpLYTZyalN2YXdacEFJV2hvMm1LTGVMcUY2T00wUUhLamZJVEtpWEFpQjlwK2xpa1NHOWFncERCQ0lEQmlTSUFtbFJWSEsyeGtGNktNajdtUUtBbFFxQk03WlM5NXIvV0xINXpZN2Nua2wzODZUYmYxdnYvaFY4OCtMVi9vWGZ6UzBVdm1mZEhyZi9ick42ODhkTEozOFpPM1h2L04rN2NmNkhKTHAxYTZwMWE3cXlzcjk4OTI3dSt1M01zNzk4V2QxZE5ka0sydW5McDNSbk82dTNJZjc2ekdIU3hYMXE3Zk9UWGpFN3Y2eDIvKy9KYS9vV3UvODlKZkJYZnZ0Nzl6K0RtMDlmVy8zUFBhQjY5amZPVWZMMXdNK3ovNjg2L3FybDdibVBYQ29rZWlIcE85ZXN4ZXJNZW5tclY4cXZVZlhnTW4rMXh4Z3Q4djFQRStpSjA1ZHMzT2VsMFYwVjVpa3d1cDBRNVRtWTFELzBlS29POXJGMi9kdWk2MmtKZmlNU01leHp1Zzc1RHBzNWZnQ1E3aVIybklMUEdXak50M1Btb1FySENvcVd5VU1VQk5iUElVcFl0czVQOUZabEYzckJBelN1KzcvZlozK0h1M2QvSjUvbjdXKzhwYStIcGZHNFN2OStWbXZLMCtuOTM3NDdFYXFsZC8yb3kySHQ5NHF4NWZmSzRlZi9mUEJzbnJudjZMV2lKcUczeVBONXMzb3hnREZwbGY4Z3FxUnRMNXhZMGpGS1VTVFQwK3lKTUs3d25mckw0d1l3QTBoOVUrMlkxY2J2QkluTVNZS2sxWjVYaDErV2w4WEtQMmtYUjBLVU9maWU5MTdzQzYybCtpNDZBRnhxV1hRN1NhdUR3MlJ2Vy9KQ0ZuWCt4UzJBdWQ2b0Q5TjFrejZVUU0rT2ZQQWtmZXRXdlgvblVRcURSSFoyNkFpcHRMVUZKMkJoYjNzYnA2NE1wUlUzTDd4YVVGL25HMWVPRHlJWHRnNDBTbFdaTnNPVVZ6M2wzbW54Wkw0YmorampmekkzUHo0N1hJaFdzTnE4WG9EdExEZlVnV2M3emc4dWhjV0J3TTdwUm9EOUZqUzloMUhXKzhqSFJMYUJweEo5ald1dnB2UTVsYmZsTU9BQUE9In0= -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["original_title"],"name":[1],"type":["chr"],"align":["left"]},{"label":["title"],"name":[2],"type":["chr"],"align":["left"]},{"label":["homepage"],"name":[3],"type":["chr"],"align":["left"]},{"label":["budget"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["original_language"],"name":[5],"type":["chr"],"align":["left"]},{"label":["overview"],"name":[6],"type":["chr"],"align":["left"]},{"label":["popularity"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["release_date"],"name":[8],"type":["chr"],"align":["left"]},{"label":["revenue"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["runtime"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["tagline"],"name":[11],"type":["chr"],"align":["left"]},{"label":["vote_average"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["vote_count"],"name":[13],"type":["dbl"],"align":["right"]}],"data":[{"1":"Avatar","2":"Avatar","3":"http://www.avatarmovie.com/","4":"2.37e+08","5":"en","6":"In the 22nd century, a paraplegic Marine is dispatched to the moon Pandora on a unique mission, but becomes torn between following orders and protecting an alien civilization.","7":"150.43758","8":"10/12/2009","9":"2787965087","10":"162","11":"Enter the World of Pandora.","12":"7.2","13":"11800"},{"1":"Pirates of the Caribbean: At World's End","2":"Pirates of the Caribbean: At World's End","3":"http://disney.go.com/disneypictures/pirates/","4":"3.00e+08","5":"en","6":"Captain Barbossa, long believed to be dead, has come back to life and is headed to the edge of the Earth with Will Turner and Elizabeth Swann. But nothing is quite as it seems.","7":"139.08262","8":"19/05/2007","9":"961000000","10":"169","11":"At the end of the world, the adventure begins.","12":"6.9","13":"4500"},{"1":"Spectre","2":"Spectre","3":"http://www.sonypictures.com/movies/spectre/","4":"2.45e+08","5":"en","6":"A cryptic message from Bond’s past sends him on a trail to uncover a sinister organization. While M battles political forces to keep the secret service alive, Bond peels back the layers of deceit to reveal the terrible truth behind SPECTRE.","7":"107.37679","8":"26/10/2015","9":"880674609","10":"148","11":"A Plan No One Escapes","12":"6.3","13":"4466"},{"1":"The Dark Knight Rises","2":"The Dark Knight Rises","3":"http://www.thedarkknightrises.com/","4":"2.50e+08","5":"en","6":"Following the death of District Attorney Harvey Dent, Batman assumes responsibility for Dent's crimes to protect the late attorney's reputation and is subsequently hunted by the Gotham City Police Department. Eight years later, Batman encounters the mysterious Selina Kyle and the villainous Bane, a new terrorist leader who overwhelms Gotham's finest. The Dark Knight resurfaces to protect a city that has branded him an enemy.","7":"112.31295","8":"16/07/2012","9":"1084939099","10":"165","11":"The Legend Ends","12":"7.6","13":"9106"},{"1":"John Carter","2":"John Carter","3":"http://movies.disney.com/john-carter","4":"2.60e+08","5":"en","6":"John Carter is a war-weary, former military captain who's inexplicably transported to the mysterious and exotic planet of Barsoom (Mars) and reluctantly becomes embroiled in an epic conflict. It's a world on the brink of collapse, and Carter rediscovers his humanity when he realizes the survival of Barsoom and its people rests in his hands.","7":"43.92699","8":"07/03/2012","9":"284139100","10":"132","11":"Lost in our world, found in another.","12":"6.1","13":"2124"},{"1":"Spider-Man 3","2":"Spider-Man 3","3":"http://www.sonypictures.com/movies/spider-man3/","4":"2.58e+08","5":"en","6":"The seemingly invincible Spider-Man goes up against an all-new crop of villain – including the shape-shifting Sandman. While Spider-Man’s superpowers are altered by an alien organism, his alter ego, Peter Parker, deals with nemesis Eddie Brock and also gets caught up in a love triangle.","7":"115.69981","8":"01/05/2007","9":"890871626","10":"139","11":"The battle within.","12":"5.9","13":"3576"}],"options":{"columns":{"min":{},"max":[10],"total":[13]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
