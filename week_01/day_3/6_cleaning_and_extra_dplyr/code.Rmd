@@ -23,14 +23,16 @@ head(movies)
 # 2. Select specific columns
 
 ```{r}
-movies_selected <-
-  movies %>% 
+movies_selected <- movies %>% 
   select(title, runtime, budget)
+
 movies_selected
 ```
 
 # 3. Count the number of missing values
 Ok, now take your subsetted data movies_selected, and count the number of missing values in each column.
+
+# My answer
 
 ```{r}
 movies_selected %>% 
@@ -45,6 +47,15 @@ movies_selected %>%
 ```{r}
 movies_selected %>% 
   filter(is.na(budget))
+```
+
+# CodeClan answer - running multiple summarises
+
+```{r}
+movies_selected %>% 
+  summarise(na_runtime = sum(is.na(runtime)),
+            na_title = sum(is.na(title)),
+            na_budget = sum(is.na(budget)))
 ```
 
 There’s not too many NAs, but there are actually quite a few movies with a runtime of 0 in this dataset. Since it’s impossible for a movie to have a runtime of 0, use the function na_if to convert runtimes of length 0 into NAs. Save this into a new variable called movies_runtime. Then count how many missing values there are now in the column runtime.
