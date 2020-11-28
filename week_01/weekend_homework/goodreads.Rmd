@@ -1,0 +1,259 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(stringr)
+```
+
+```{r}
+goodreads_data <- read_csv("data/books.csv")
+```
+
+Trying to read in publication date as date. Doesn't work. I guess the format isn't working for as.Date
+```{r}
+# test_goodreads <- read_csv("data/books.csv", col_types = cols('publication_date' = col_date()))
+```
+
+# Getting to know data without code
+
+This dataset contains observations on 8472 books gathered by the website GoodReads, which allows users to rate and search books. It was collected and cleaned by user Jealous Leopard on Kaggle and scraped directly from GoodReads.
+
+From a quick glance, the data seems to contain one unique entry for each novel, rather than for every issue of the book. This dataset contains information about the book 
+   - title, author(s), ISBN and ISBN13, language, number of pages, publication date and publisher - 
+and information unique to the GoodReads site   
+    - the bookID, rating, number of ratings, number of text ratings - 
+    
+We do not have data for any book published after 2010, which suggests that the dataset is not up to date.
+
+The dataset does not include a genre field, which precludes any analysis based on genre unless we comnbine our dataset with a reliable directory containing our books and categorised into genre. This may be available from an online bookseller or a library.
+
+Language code is provided in a coded character format. Some of the codes are easily guessable. At first glance, all of the codes are 3 letter strings which suggests these languages are coded in ISO-639-2 or ISN-639-3.
+
+According to Wikipedia, ISBN-13 is a replacement for the original 10 digit ISBN codes. 10 digit ISBN codes can be converted to ISBN13 by appending 978 so we should be able to work with the data without the ISBN code.
+
+When loading in the GoodReads data, RStudio had problems parsing 2 rows (1570 and 3349). The unreadable values have been replaced with NAs. This is not significant in a dataset of 8472 observations.
+
+All books with an average rating of 0.0 have 0 ratings, so we will drop these.
+A number of books with a 0 rating count have average ratings of up to 5.0. We will check the spread of ratings and drop those with very small numbers of ratings. As this is a 5 star rating system, I will definitely remove any entries with less than 5 raters.
+
+Some books are listed as 0 pages, which seems innaccurate so I will convert these to NA.
+
+One book has a publication date of 1 which I will also assume to be an NA value.
+
+The data in rows 8471 and 8470 seems to have been moved along by one column. This is likely to be a manual error due to something like an extra comma, I will drop this row as I cannot be sure that the values will match up.
+
+# Dataset cleaning for my convenience and preferences
+
+Drop ISBN and use dim to check we have dropped one column
+
+```{r}
+dim(goodreads_data)
+# 12 columns
+
+goodreads_data <- (select(goodreads_data, -isbn))
+
+dim(goodreads_data)
+# 11 columns
+```
+
+Drop row if number of ratings is less than 5
+```{r}
+goodreads_data <- 
+  goodreads_data %>% 
+  filter(ratings_count > 5)
+# Leaves 8153 observations
+```
+
+Convert 0 number of pages to NA
+```{r}
+# goodreads_data <-
+#  goodreads_data %>% 
+#    mutate(
+#      num_pages = ifelse(num_pages ==0, NA, num_pages)
+#    )
+
+goodreads_data <- goodreads_data %>% 
+  mutate(
+    num_pages = na_if(num_pages, 0)
+  )
+```
+
+Convert dates of 0 to NA
+```{r}
+goodreads_data <- goodreads_data %>% 
+  mutate(
+    publication_date = na_if(publication_date, 0)
+  )
+```
+
+Convert publication date to numeric
+Can't do it!
+```{r}
+#test_goodreads <- goodreads_data %>% 
+#  mutate(
+#    publication_date = as.Date(publication_date, "m/d/%y")
+#  )
+```
+
+drop row 8471 and 8470 "Brown's Star Atlas: Showing All The Bright Stars With Full Instructions How To Find And Use Them For Navigational Purposes And Department Of Trade Examinations." "Streetcar Suburbs"
+
+```{r}
+#test_goodreads <- goodreads_data %>% 
+#  filter(
+#    !is.na(average_rating)
+#  )
+# Removes 2 observations as expected (from 8153 to 8151)
+
+goodreads_data <- goodreads_data %>% 
+  filter(
+    !is.na(average_rating)
+  )
+```
+
+# Questions to ask of the dataset
+Note that all of these observations exlcude books with less than 5 ratings or with a missing average rating. This enables us to more accurately and easily explore popularity.
+
+## Interesting facts
+- most reviewed
+
+The top 3 most rated books are The Hobbit, The Catcher in the Rye and Angels & Demons. We can surmise that these are the books most often read by GoodReads userbase (at least by those who record and rate their reading on the site).
+
+4 of the 7 Harry Potter books appear in the top 10 most rated books.
+
+Interestingly book 1, Harry Potter and the Philosophers Stone, does not appear in the top 10 most rated books. 
+However Harry Potter books have different titles in the UK and US so perhaps there are two records for book 1.
+
+Checking number of records for each Harry Potter book. Only book 6 "Harry Potter and the Half-Blood Prince" appears twice.
+
+Combining the number of ratings for the 2 HP Book 6 makes no difference to the top 10 most rated books :facepalm:
+```{r}
+goodreads_data %>% 
+  arrange(desc(ratings_count)) %>% 
+  select(title, average_rating, authors, ratings_count) %>% 
+  head(10)
+```
+
+```{r}
+# Finding all Harry Potter books
+goodreads_data %>% 
+  filter(
+    str_detect(title, "Harry Potter and the")
+  ) %>% 
+  pull(title)
+
+# Finding the two versions of HP Book 6 - IDnumbers 1 and 2005
+goodreads_data %>% 
+  filter(
+    str_detect(title, "Harry Potter and the Half-Blood")
+  )
+
+# Adding ratings count from 2nd version of Half Blood to 1st version using df goodreads_test to check.
+goodreads_test <- goodreads_data
+
+goodreads_test[1, "ratings_count"] <- goodreads_test[1, "ratings_count"] + goodreads_test[2005, "ratings_count"]
+
+goodreads_test[1, "ratings_count"] > goodreads_data[1, "ratings_count"]
+
+goodreads_data[1, "ratings_count"] <- goodreads_data[1, "ratings_count"] + goodreads_data[2005, "ratings_count"]
+  
+```
+
+- longest book
+The record with the largest number of pages is The Complete Aubrey/Maturin Novels (5 Volumes), but as this is a set of 5 volumes, I would say that "The Second World War" by Winston S. Churchill and John Keegan is the longest book in our dataset with 4736 pages!
+
+```{r}
+goodreads_data %>% 
+  arrange(desc(num_pages)) %>% 
+  select(title, authors, num_pages)
+  head(5)
+```
+
+- highest rated book
+The most highly rated book is "Existential Meditation" by Cleveland. Interestingly. I would categorise 3 out of the 5 most highly rated books as philosophical - "Existential Meditation", "Little Book for God's Children" and "The Complete Calvin and Hobbes".
+I would definitely be interested in exploring this dataset with an additional genre category.
+
+```{r}
+goodreads_data %>% 
+  arrange(desc(average_rating)) %>% 
+  select(title, authors, average_rating) %>% 
+  head(5)
+```
+
+
+## Useful info for analysis
+- average number of reviews
+The books in this dataset have 20193.38 reviews on average.
+The lowest number of reviews is 6 as I removed all books with 5 reviews or less.
+The highest number of reviews is 2530894.
+
+```{r}
+goodreads_data %>%
+  mutate(average_num_reviews = mean(ratings_count)) %>% 
+  head(1) %>% 
+  pull(average_num_reviews)
+
+goodreads_data %>% 
+  arrange(desc(ratings_count)) %>% 
+  head(1) %>% 
+  pull(ratings_count)
+```
+
+- average rating
+The books in this dataset have an average rating of 3.95 and I have stored this value in a value called average_rating_all.
+I think there is definitely a simpler way to code this!
+```{r}
+average_rating_all <- goodreads_data %>%
+  mutate(average_rating_all = mean(average_rating)) %>% 
+  head(1) %>% 
+  pull(average_rating_all)
+```
+
+- number of languages (and explore the codes for English)
+
+We have 20 distinct language codes in this dataset.
+It appears that we have multiple codes for English - en-CA, en-GB, en-US and eng, enm (Middle English)
+The most read language on GoodReads is English.
+Spanish, Swedish, French have between 2500 and 6900 ratings. All other languages in the dataset have less than 1000 average ratings per book.
+```{r}
+goodreads_data %>% 
+  group_by(language_code) %>% 
+  summarise(ratings_count = mean(ratings_count)) %>% 
+  arrange(desc(ratings_count))
+```
+
+
+## Questions we can answer
+- How does release date impact popularity?
+
+calculate coefficient between release date and average rating
+group into sensible categories by year and calculate average rating
+make a bar chart showing average rating by year of publication
+
+
+- How does the length of the book relate to how much readers like it?
+
+as above with book length
+
+
+- Are shorter books read more often?
+
+categorise books by length (use a standard metric like novella, etc.) and then calculate ratings count.
+
+
+- Are books with longer titles more boring?
+
+compare length of string (perhaps tokenised into words) in title with average rating
+
+- Can we guess what language(s) GoodReads users speak?
+
+Some language analysis above, there are clearly more popular languages in the dataset with easy to define categories - English overwhelmingly the most common, then 3 languages with middling numbers and the rest tailing off.
+We could categorise languages as European or not European, romance or not, etc. and compare the popularity of the categories.
+
+- Explore HowTo books as a category
+use  to find all the how to books and compare them against the dataset as a whole.
+
+- Explore volumes as a category
+as above with str_detect("#")
