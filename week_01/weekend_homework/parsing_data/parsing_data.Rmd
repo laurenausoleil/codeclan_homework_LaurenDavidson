@@ -1,0 +1,89 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(readr)
+```
+
+
+locale() shows the current locale
+```{r}
+locale()
+```
+
+we can change timezone with tz and encoding with encoding
+```{r}
+locale(tz= "US/Central")
+locale(encoding = "Latin1")
+```
+
+To read a file with readr use read_file()
+```{r}
+pride_and_prej <- read_file("data/pride_and_prejudice_utf_16.txt")
+
+# no data!
+
+pride_and_prej <- read_file("data/pride_and_prejudice_utf_16.txt",
+                            locale = locale(encoding = "utf-16")
+                           )
+# a lovely text :D
+```
+
+```{r}
+cakes_europe <-
+  read_file("data/cake_european.csv")
+# list of colon separated data
+
+cakes_europe <- 
+  read_csv("data/cake_european.csv")
+# data with only one variable
+
+cakes_europe <-
+  read_file("data/cake_european.csv",
+            locale = locale(grouping_mark = ";")
+            )
+#same as file_cakes_europe
+
+cakes_europe <-
+  read_tsv("data/cake_european.csv")
+
+# data with only one variable
+
+cakes_europe <-
+  read_delim("data/cake_european.csv",
+             delim = ";")
+```
+
+Read the file cake_european.csv. The file uses a semi-colon separator, why do you think that is?
+This data is separated by colons as the values in the columns include commas to denote decimal points. If it was stored as csv we would get very confused data with too many values per observation.
+
+Examine the read-in data closely: what type are the columns?
+All of the columns except eggs are character vectors, but they contain numeric values.
+
+Now, when reading the data, set locale = locale(decimal_mark = ',') in the function you use to read in the data. What do you notice about the data now?
+When we set the locale correctly, R recognises the ingredients columns as numeric values. It looks like in a British locale, R will only assume that a value is numeric if it contains numbers and full stops.
+```{r}
+cakes_europe <-
+  read_delim("data/cake_european.csv",
+             delim = ";",
+             locale = locale(decimal_mark = ",")
+             )
+```
+
+Next, when reading the data, set locale = locale(decimal_mark = ',', date_format = '%d/%m/%Y'). What do you notice about the data now?
+
+I can't see a difference :_(
+
+```{r}
+date_cakes_europe <-
+  read_delim("data/cake_european.csv",
+             delim = ";",
+             locale = locale(decimal_mark = ",",
+                             date_format = "%d/%m/$Y"
+                             )
+             )
+```
+
