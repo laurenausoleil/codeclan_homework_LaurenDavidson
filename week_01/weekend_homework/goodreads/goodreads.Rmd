@@ -73,11 +73,15 @@ goodreads_data <-
 
 Convert 0 number of pages to NA
 ```{r}
+# Failed attempt ------------------------------------------------------------
+
 # goodreads_data <-
 #  goodreads_data %>% 
 #    mutate(
 #      num_pages = ifelse(num_pages ==0, NA, num_pages)
 #    )
+
+# Success -------------------------------------------------------------------
 
 goodreads_data <- goodreads_data %>% 
   mutate(
@@ -94,12 +98,15 @@ goodreads_data <- goodreads_data %>%
 ```
 
 Convert publication date to numeric
-Can't do it!
 ```{r}
+# Failed attempt -----------------------------------------------------
+
 #test_goodreads <- goodreads_data %>% 
 #  mutate(
 #    publication_date = as.Date(publication_date, "m/d/%y")
 #  )
+
+# Success ------------------------------------------------------------------
 
 test_goodreads <-
   read_csv("data/books.csv",
@@ -110,11 +117,15 @@ test_goodreads <-
 drop row 8471 and 8470 "Brown's Star Atlas: Showing All The Bright Stars With Full Instructions How To Find And Use Them For Navigational Purposes And Department Of Trade Examinations." "Streetcar Suburbs"
 
 ```{r}
+
+# Test -------------------------------------------------------------------
 #test_goodreads <- goodreads_data %>% 
 #  filter(
 #    !is.na(average_rating)
 #  )
 # Removes 2 observations as expected (from 8153 to 8151)
+
+# Implement -------------------------------------------------------------------
 
 goodreads_data <- goodreads_data %>% 
   filter(
@@ -139,6 +150,8 @@ Checking number of records for each Harry Potter book. Only book 6 "Harry Potter
 
 Combining the number of ratings for the 2 HP Book 6 makes no difference to the top 10 most rated books :facepalm:
 ```{r}
+# find most read books --------------------------------------------------------
+
 goodreads_data %>% 
   arrange(desc(ratings_count)) %>% 
   select(title, average_rating, authors, ratings_count) %>% 
@@ -146,20 +159,23 @@ goodreads_data %>%
 ```
 
 ```{r}
-# Finding all Harry Potter books
+# Finding all Harry Potter books ---------------------------------------------
+
 goodreads_data %>% 
   filter(
     str_detect(title, "Harry Potter and the")
   ) %>% 
   pull(title)
 
-# Finding the two versions of HP Book 6 - IDnumbers 1 and 2005
+# Finding the two versions of HP Book 6 - IDnumbers 1 and 2005 ----------------
+
 goodreads_data %>% 
   filter(
     str_detect(title, "Harry Potter and the Half-Blood")
   )
 
-# Adding ratings count from 2nd version of Half Blood to 1st version using df goodreads_test to check.
+# Adding ratings count from 2nd version of Half Blood to 1st version using df goodreads_test to check that our new number was higher. -----------------------------------------------------------------------------
+
 goodreads_test <- goodreads_data
 
 goodreads_test[1, "ratings_count"] <- goodreads_test[1, "ratings_count"] + goodreads_test[2005, "ratings_count"]
@@ -247,6 +263,8 @@ Our top 5 most rated years for published books fall between 1980 and 2013.
 I would conclude that the users from this dataset have more interest and higher ratings for books from the late 20th C and early 21st C.
 
 ```{r}
+# How many books per year? -------------------------------------------------------
+
 goodreads_data %>% 
   select(title, average_rating, ratings_count, publication_date) %>% 
   mutate(pub_year = format(publication_date, "%Y")) %>% 
@@ -257,6 +275,11 @@ goodreads_data %>%
   ) %>% 
   arrange(desc(books_count)) %>% 
   head(10)
+```
+
+
+```{r}
+# Finding the average rating for each year of publication excluding years with less than 10 books published ------------------------------------------------------
 
 goodreads_data %>% 
   select(title, average_rating, ratings_count, publication_date) %>% 
@@ -269,6 +292,8 @@ goodreads_data %>%
   filter(books_count > 10) %>% 
   arrange(desc(avg_rating_per_year)) %>% 
   head(10)
+
+# Finding the average number of ratings for each year of publication excluding years with less than 10 books published -------------------------------------
 
 goodreads_data %>% 
   select(title, average_rating, ratings_count, publication_date) %>% 
@@ -289,7 +314,7 @@ group into sensible categories by year and calculate average rating
 make a bar chart showing average rating by year of publication
 
 
-- How does the length of the book relate to how much readers like it?
+### How does the length of the book relate to how much readers like it?
 
 I used information from https://www.standoutbooks.com/how-long-book/ to categorise the type of book by its length into short story/children's book, novella, novel and epic lengths based on their number of pages.
 
@@ -314,30 +339,20 @@ goodreads_data %>%
   ) %>% 
   arrange(desc(read_count))
 ```
-as above with book length
-https://www.standoutbooks.com/how-long-book/ gives suggested lengths for different types of books.
-< 10,000 words = childrens or short story
-  < 40 pages - VERY SHORT
-10,000 < 40,000 - novella
-  40 < 160 - SHORT
-40,000 < 110,000 - novel 
-  160 < 440 - NORMAL
-110,000 < - epic
-  440 < - EPIC
 
-
-- Are shorter books read more often?
+### Are shorter books read more often?
 
 categorise books by length (use a standard metric like novella, etc.) and then calculate ratings count.
 
 Our analysis shows that GoodReads users are less likely to have rated a book of shorter length types than longer books, but this does not really tell us whether these users are more or less likely to read a book depending on its length.
 
-- Are books with longer titles more boring?
+### Are books with longer titles more boring?
 
 compare length of string (perhaps tokenised into words) in title with average rating
 
 The book with the longest title in this dataset has 212,268 characters in it. Annoyingly this is because this book title actually contains the values for a load of books which didn't parse correctly.
 This is a problem I no longer have time to solve :(
+
 The longest real title has 254 characters and the shortest has 2 "V.".
 We can roughly categorise title lengths as short < 40, medium 40-80 and long > 80.
 With these categories, there is very little change in rating according to length of title, but read count definitely descends with the length of the books title.
@@ -378,13 +393,13 @@ goodreads_data %>%
 ```
 
 
-- Can we guess what language(s) GoodReads users speak?
+### Can we guess what language(s) GoodReads users speak?
 
-Some language analysis above, there are clearly more popular languages in the dataset with easy to define categories - English overwhelmingly the most common, then 3 languages with middling numbers and the rest tailing off.
-We could categorise languages as European or not European, romance or not, etc. and compare the popularity of the categories.
+Some language analysis above, there are clearly more popular languages in the dataset which can be grouped intuitively - English is overwhelmingly the most common, then 3 languages with middling numbers and the rest tailing off.
+We could also categorise languages as European or not European, romance or not, etc. and compare the popularity of the categories.
 
-- Explore HowTo books as a category
-use  to find all the how to books and compare them against the dataset as a whole.
+### Explore HowTo books as a category
+use str_detect("how to") or grep to find all the how to books and compare them against the dataset as a whole.
 
-- Explore volumes as a category
-as above with str_detect("#")
+### Explore volumes as a category
+as above with "#"
