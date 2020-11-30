@@ -1,6 +1,8 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r}
@@ -32,7 +34,7 @@ and information unique to the GoodReads site
     
 We do not have data for any book published after 2010, which suggests that the dataset is not up to date.
 
-The dataset does not include a genre field, which precludes any analysis based on genre unless we comnbine our dataset with a reliable directory containing our books and categorised into genre. This may be available from an online bookseller or a library.
+The dataset does not include a genre field, which precludes any analysis based on genre unless we combine our dataset with a reliable directory containing our books and categorised into genre. This may be available from an online bookseller or a library.
 
 Language code is provided in a coded character format. Some of the codes are easily guessable. At first glance, all of the codes are 3 letter strings which suggests these languages are coded in ISO-639-2 or ISN-639-3.
 

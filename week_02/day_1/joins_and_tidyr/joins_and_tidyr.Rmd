@@ -2,3 +2,177 @@
 title: "R Notebook"
 output: html_notebook
 ---
+
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+
+```{r}
+card_base <- read_csv("data/CardBase.csv")
+
+customer_base <- read_csv("data/CustomerBase.csv")
+
+exam_score <- read_csv("data/exam_scores.csv")
+
+fraud_base <- read_csv("data/FraudBase.csv")
+
+hat_obsv <- read_csv("data/hat_observations.csv")
+
+transaction_base <- read_csv("data/TransactionBase.csv")
+```
+
+
+Joins and tidyr Homework
+
+
+The data for the joining tasks is from Kaggle and contains synthetic (fake) credit card information and transactions. The data for the tidyr tasks is also synthetic.
+
+1 MVP
+1.1 Joins
+
+Question 1
+
+Read in all 4 credit card transaction datasets and clean column names.
+
+```{r}
+card_base <- clean_names(card_base)
+customer_base <- clean_names(customer_base)
+fraud_base <- clean_names(fraud_base)
+transaction_base <- clean_names(transaction_base)
+
+```
+
+Question 2
+
+Join the data containing card details and customer details by customer id, so that all records of card details and any matching records in customer details are kept. Before you run the code, think about how many rows you expect to see after joining.
+
+I expect to see at least as many rows as there are in card_base so at least 500 and maybe some more if some customers have more than one card registered.
+Outputis 500 so it's likely that every customer has one card, or that every card has a unique customer ID
+
+```{r}
+card_plus_customer <-
+  left_join(
+    card_base, customer_base,
+    by = "cust_id"
+  )
+```
+
+
+Question 3
+
+Join the data containing fraud details with transaction details so all rows of both tables are kept. What does the resulting row number tell you?
+Fraud base has 109 observations and transactions has 10000.
+The resulting number of observations, also 10000, tells us that all of the items contained in fraud_base have a matching record in transaction base. Or that we have 109 transactions flagged as potentially fraudulent in our transaction database!
+
+```{r}
+transaction_plus_fraud <-
+  full_join(
+    transaction_base, fraud_base,
+    by = "transaction_id"
+  )
+```
+
+
+Question 4
+
+Join the data containing card details with transaction details so rows from the first which have matching ones in the second are returned, but only return rows in the first table once.
+
+```{r}
+card_and_transaction <- 
+  semi_join(
+    card_base, transaction_base,
+    by = c("card_number" = "credit_card_id")
+  )
+```
+
+
+1.2 tidyr
+Question 5
+
+Read in hat_observations and separate observation into two columns, hat_colour and hat_type.
+
+```{r}
+hat_obsv <- hat_obsv %>% 
+  separate(
+    col = observation,
+    into = c("hat_colour", "hat_type"),
+    sep = ","
+  )
+```
+
+
+Question 6
+
+Unite day, month, and year columns into a column called date using a suitable separator. Then find the date where the most berets were observed.
+
+The best day for berets was 18/6/2018.
+
+```{r}
+hat_obsv %>% 
+  unite(
+    col = "date",
+    day, month, year,
+    sep = "/"
+  ) %>% 
+  filter(hat_type == "beret") %>% 
+  arrange (desc(observation_count))
+```
+
+
+2 Extension
+2.1 Joins
+Question 1
+
+Can you join all 4 datasets together so that you’re left with a dataset that looks like below with 109 rows and 12 columns?
+
+```{r}
+left_join(
+  customer_base, card_base,
+  by = "cust_id"
+) %>% 
+left_join(
+  transaction_base,
+  by = c("card_number" = "credit_card_id")
+) %>%
+left_join(
+  fraud_base,
+  by = "transaction_id"
+)
+  
+left_join(
+  fraud_base, transaction_base,
+  by = "transaction_id"
+) %>% 
+left_join(
+  card_base,
+  by = c("credit_card_id" = "card_number")
+) %>% 
+left_join(
+  customer_base,
+  by = "cust_id"
+)
+```
+
+
+2.2 tidyr
+Question 2
+
+Read in exam_scores and transform it into long format with two new columns exam_question and score. Then, using separate and select, remove superfluous information from the values in exam_question
+
+```{r}
+exam_score %>% 
+  pivot_longer(
+    cols = exam_Q1:exam_Q10,
+    names_to = "question",
+    values_to = "score"
+  ) %>% 
+  separate(
+    col = question,
+    into = c("exam", "Question number"),
+    sep = "Q"
+  ) %>% 
+  select(-exam)
+```
+
