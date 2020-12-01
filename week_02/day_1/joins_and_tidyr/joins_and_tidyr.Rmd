@@ -116,14 +116,16 @@ hat_obsv %>%
     day, month, year,
     sep = "/"
   ) %>% 
-  filter(hat_type == "beret") %>% 
-  arrange (desc(observation_count))
+  filter(hat_type == "beret") %>%
+  group_by(date) %>% 
+  summarise(total = sum(observation_count)) %>% 
+  arrange(desc(total))
 ```
 
 
 2 Extension
 2.1 Joins
-Question 1
+Question 1 OR 7
 
 Can you join all 4 datasets together so that you’re left with a dataset that looks like below with 109 rows and 12 columns?
 
@@ -157,7 +159,7 @@ left_join(
 
 
 2.2 tidyr
-Question 2
+Question 2 OR 8
 
 Read in exam_scores and transform it into long format with two new columns exam_question and score. Then, using separate and select, remove superfluous information from the values in exam_question
 
