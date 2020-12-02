@@ -73,7 +73,7 @@ tweets %>%
   mutate(tweet_length = length(text)) %>% 
   summarise (avg_tweet = mean(tweet_length))
 ```
-
+2#\
 
 The code_clan_info.csv data file contains status_url along with other info. Load this in, and join it to the code_clan_tweets tibble, so that you have a status_url for each tweet. Decide which variable to join the tibbles on.
 
@@ -102,7 +102,20 @@ codeclan_hashtags <- tweet_status %>%
 4 Extensions
 Some tweets have more than one hashtag, denoted by the c( symbols at the start of the string. Use the str_sub() and str_detect() functions and your codeclan_hashtags tibble from above to find all the cases in which the hashtag string begins with charactersc(.
 Hint
+
+```{r}
+codeclan_hashtags %>% 
+  filter(str_detect(hashtags, "c\\("))
+```
+
+
 Use the str_detect() function to find all tweets with text that mentions “Edinburgh”, and count how many such tweets there are.
 Hint
+```{r}
+codeclan_hashtags %>% 
+  str_detect("[Ed]dinburgh")
+```
+
+
 Use str_extract_all() with a regular expression to find out which Twitter users CodeClan have been tweeting.
 Hint
