@@ -21,7 +21,7 @@ Identify any columns corresponding to primary keys and foreign keys in each tabl
 Are there any constraints on foreign keys?
 Can you summarise any relationships between tables?
 
-We want to store database details securely on your computer. First, create a file outside a Git repo (say in your home directory) called acme_credentials.R and add all of the connection details given above to the file as R character variables:
+We want to store database details securely on your computer. First, create a file outside a Git repo (say in your home directory) called acme_credentials.R and add all of the connection details given above to the file as R character variables
 
 ## 1.2 MVP SQL queries
 Use an R Notebook (and not DBeaver) from this point onwards. Write your SQL queries either in native SQL code chunks, or pass them in to dbGetQuery() function calls in R code chunks

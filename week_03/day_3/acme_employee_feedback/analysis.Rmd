@@ -1,0 +1,78 @@
+---
+title: "analysis"
+output: html_notebook
+---
+
+```{r}
+library(RPostgres)
+library(tidyverse)
+```
+
+```{r}
+# source credentials file
+source("~user/credentials/acme_credentials.R")
+```
+
+```{r}
+# create connection object
+acme_connection <- dbConnect(
+  drv = Postgres(),
+  dbname = acme_database,
+  host = acme_host,
+  port = acme_port,
+  user = acme_username,
+  password = acme_password,
+  bigint = "numeric"
+)
+```
+
+```{r}
+# Remove passwords
+rm(acme_password, acme_username, acme_database, acme_host, acme_port)
+```
+
+Get the records of all employees, adding a field full_name containing the first_name and last_name of each employee separated by a space.
+
+```{r}
+# Load tables into R
+employees <- dbGetQuery(acme_connection, "SELECT * FROM employees")
+
+teams <- dbGetQuery(acme_connection, "SELECT * FROM teams")
+```
+
+```{r}
+employees %>% 
+  mutate(full_name = paste(first_name, last_name, sep = " ")) %>% 
+    select(id, full_name, email, team_id)
+```
+
+Get all employees records again, but this time listing their team name (as team_name), rather than their team_id.
+
+```{r}
+employees %>% 
+  inner_join(teams, by = c("team_id" = "id"), keep = FALSE) %>% 
+  select(-team_id)
+```
+
+
+Obtain a breakdown of the number of employees per team. Order the table by decreasing number of employees. Include all teams, even if they have no employees.
+
+```{r}
+employees %>% 
+  right_join(teams, c("team_id" = "id"), keep = FALSE) %>% 
+  select(-team_id) %>% 
+  group_by(name) %>% 
+  summarise(num_employees_in_team = n())
+```
+
+AcmeCorp management want to send an email survey to each of their employees. However, they are worried that some of the employees may not receive the email either because their email addresses may be invalid (in that they don’t contain an ‘@’ symbol), or they may not have a stored email address at all. Can you find all these employees?
+
+```{r}
+employees %>% 
+  filter(
+    is.na(email) |
+    str_detect(email, pattern = ".@.", negate = TRUE)
+  ) %>% 
+  arrange(email)
+```
+
