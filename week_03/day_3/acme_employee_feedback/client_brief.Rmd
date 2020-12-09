@@ -1,0 +1,60 @@
+---
+title: "Untitled"
+author: "Lauren Davidson"
+date: "09/12/2020"
+output: html_document
+---
+
+# Client requirements
+
+A client, Acme Corporation, has a PostgreSQL database containing basic details of their employees, the teams they belong to and feedbacks they have given on their employment (these are text snippets detailing positive and negative experiences, suggestions for improvement etc).
+Acme have hired us to first do some basic analysis of the data they store, and then hopefully perform a quantitative analysis of the emotional state of their corporation based on the stored employee feedbacks.
+
+
+# 1 MVP
+
+## 1.1 Setup and preparation
+
+Take some time to explore the database using DBeaver (you will need to create a new connection to acme_pool in DBeaver to do this):
+How many records are there in each table?
+Identify any columns corresponding to primary keys and foreign keys in each table.
+Are there any constraints on foreign keys?
+Can you summarise any relationships between tables?
+
+We want to store database details securely on your computer. First, create a file outside a Git repo (say in your home directory) called acme_credentials.R and add all of the connection details given above to the file as R character variables:
+
+## 1.2 MVP SQL queries
+Use an R Notebook (and not DBeaver) from this point onwards. Write your SQL queries either in native SQL code chunks, or pass them in to dbGetQuery() function calls in R code chunks
+
+Now source() the credentials file you created in the last step into a code chunk and use the sourced variables to create a connection to the acme_pool database.
+
+Get the records of all employees, adding a field full_name containing the first_name and last_name of each employee separated by a space.
+
+Get all employees records again, but this time listing their team name (as team_name), rather than their team_id.
+
+Obtain a breakdown of the number of employees per team. Order the table by decreasing number of employees. Include all teams, even if they have no employees.
+
+AcmeCorp management want to send an email survey to each of their employees. However, they are worried that some of the employees may not receive the email either because their email addresses may be invalid (in that they don’t contain an ‘@’ symbol), or they may not have a stored email address at all. Can you find all these employees?
+
+2 Extensions
+2.1 Harder SQL queries
+Which of the employees provided the most recent feedback? What was the date of this feedback?
+
+You are chatting with one of the AcmeCorp employees, and she mentions that one of the teams in the corporation has some employees whose stored first_name contains only their first initial, e.g. “D” instead of “Dionne”, “C” instead of “Charles”. Can you find the name of the team that she is most likely referring to (i.e. which team has the highest number of employees with single initial first_names)`?
+
+2.2 Combining SQL and R coding - basic sentiment analysis
+AcmeCorp would like you to perform very basic ‘sentiment analysis’ of the stored employee feedbacks. They have provided a set of ‘positive’ and ‘negative’ words to use to score feedback messages in this analysis (see below).
+The score for each message should start at zero.
+Every time a ‘positive’ word occurs in a message, the message’s score should increase by 1 point.
+Every time a ‘negative’ word occurs in a message, the message’s score should decrease by 1 point.
+Punctuation marks should be removed prior to scoring.
+Messages should also be converted to lowercase prior to scoring
+(i). Write some code to score all of the stored feedback messages according to these rules. You can use either a base R or tidyverse approach, whichever you prefer! If you’re keen, you could try both!
+
+(ii). One or more employees may have tied in providing the most positive comment(s). Can you find name(s) of the teams these employees belong to? Do the same for employees having provided the most negative comments. Remember that we want to do this programatically (i.e. by coding), rather than scanning through the scores by eye.
+
+This is quite a tough exercise, and in reality you wouldn’t do serious sentiment analysis in this way in R. Treat this as a coding exercise; you’ll see far better approaches with dedicated text mining packages later in the course!
+
+positive_words <- c("great", "good", "happy", "content", "fulfilled", "fulfilling", "positive", "positives", "cheerful", "nice", "ambition", "ambitions", "ambitious", "progress", "joy", "fast", "achieve", "achieving", "achievements", "best", "better",  "unlimited", "pros", "competitive", "opportunity", "advancement", "friendly", "smart", "interesting", "challenging", "grow", "caring", "balance", "helpful", "advantage", "learning", "ethical", "responsible", "responsibilities")
+
+negative_words <- c("worse", "worsening", "worst", "slow", "sluggish", "impatient", "unfulfilled", "unfulfilling", "negative", "bad", "limited", "limit", "limitations", "cons", "frustrated", "frustrating", "frustration", "dull", "boring", "politics", "political", "ignore", "ignored", "ignoring", "sad", "depressed", "depressing", "nasty", "stress", "stresses", "stressed", "stressful", "horrid", "horrible", "terrible", "deadline", "deadlines", "uncaring", "remote", "difficult", "difficulties", "bully", "bullying")

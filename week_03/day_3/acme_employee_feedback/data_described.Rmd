@@ -1,0 +1,23 @@
+---
+title: "data_described"
+author: "Lauren Davidson"
+date: "09/12/2020"
+output: html_document
+---
+The Acme Database I am working on has 3 tables: employees, feedbacks and teams.
+
+### How many records are there in each table?
+Employees - 200
+Feedbacks - 60
+Teams - 11
+
+### Are there any constraints on foreign keys?
+Employee ID in feedback cannot be null.
+Team ID in employees cannot be null.
+
+### Can you summarise any relationships between tables?
+Employees relates to Feedbacks via the employee ID
+e.id = f.employee_id
+
+Employees relates to teams via team ID
+e.team_id = teams.id
