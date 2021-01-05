@@ -1,0 +1,120 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(CodeClanData)
+
+backpacks <- backpack
+```
+
+In all plots you make, ensure your labels are appropriate. You also must write down a short summary of what each plot tells you in order to meet MVP.
+
+# MVP
+
+
+Question 1.
+
+Load in the libraries you need, and look at the backpack data. Take note of variable names and dimensions.
+
+Contains backpack weight, body weight, what I assume to be a ratio between these two, what looks like a logical column for back problems, the person's major, their year (at university/school?), sex, status (which might refer to Undergraduate and Graduate) and a variable called units which could be how many subjects they are studying.
+
+I assume the weights are given in pounds.
+
+Units range from 0-19.
+Year from 0-6.
+Majors contains 41 values which are organised as factors.
+
+```{r}
+head(backpacks)
+
+unique(backpacks$major)
+```
+
+
+Question 2.
+
+What is the distribution of backpack weights that students are carrying? Choose an appropriate graph to show the distribution.
+
+This line graph shows theferquency of the occurence of a weight of backpack in the dataset. It shows that backpack weight has a standard distribution centring just under 10 pounds and tailing on the heavy side. 
+
+```{r}
+ggplot(backpacks) +
+  aes(x = backpack_weight) +
+  geom_density() +
+  labs(
+    title = "Frequency of backpack weights carried by higher education students",
+    y = "Frequency",
+    x = "Backpack Weight (pounds)"
+  )
+```
+
+Question 3.
+
+Are there differences in backpack weight between sex?
+
+This graph shows the frequency of different backpack weights split by the student's gender.
+The backpack weight for women trends slightly smaller than it does for men centring just below 10 pounds and tailing on the heavy side.
+The backpack weight for men trends slightly larger than womens and centres at 10 pounds with a longer tail to the heavier side.
+
+```{r}
+ggplot(backpacks) +
+  aes(x = backpack_weight, colour = sex) +
+  geom_density() +
+  labs(
+    title = "Frequency of backpack weights for each gender",
+    y = "Frequency",
+    x = "Backpack Weight (pounds)"
+  )
+```
+
+Question 4.
+
+What is the relationship between body weight and backpack weight?
+
+```{r}
+ggplot(backpacks) +
+  aes(x = backpack_weight, y = body_weight) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+ggplot(backpacks) +
+  aes(x = backpack_weight, y = body_weight) +
+  geom_point() +
+  geom_smooth()
+```
+
+
+Question 5.
+
+Is this relationship different between men and women? Choose an appropriate plot and interpret your findings.
+
+Question 6.
+
+What proportion of students report back pain?
+
+Question 7.
+
+Is this proportion different between men and women?
+
+Question 8.
+
+Now you’ve investigated your data separately, create plots to describe the relationship between backpack weight, body weight, gender and reported backpain.
+
+Try both backpack_weight and body_weight as well as the ratio.
+
+Hint: faceting would be useful here.
+
+3 Extensions
+
+
+Question 1.
+
+Does reported backpain differ across the year groups? Ignore year 0 in your data.
+
+Question 2.
+
+Is there a difference between how heavy the bags those in different years carry?
