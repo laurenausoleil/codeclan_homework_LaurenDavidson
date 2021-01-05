@@ -75,16 +75,26 @@ Question 4.
 
 What is the relationship between body weight and backpack weight?
 
+This chart shows a smoothed line comparing the weight of a backpack to the average weight of people who carry that size of backpack. This shows us that the relationship between body size and backpackweight has a positive correlation which is most significant in body weights of less than 150 pounds and over 160. We can also see that students weighing 150 pounds carry a range of backpack sizes, so the relationship between body weight and backpack weight is not easily described by a straight line.
+
+
 ```{r}
+# To see smooth line chart
+
 ggplot(backpacks) +
   aes(x = backpack_weight, y = body_weight) +
   geom_point() +
   geom_smooth(method = "lm")
 
+# To see the curve of relationship
 ggplot(backpacks) +
   aes(x = backpack_weight, y = body_weight) +
-  geom_point() +
-  geom_smooth()
+  geom_smooth()  +
+  labs(
+      title = "Relationship between student and backpack weight",
+      x = "Backpack Weight (pounds)",
+      y = "Average Weight of Carrier (pounds)"
+    )
 ```
 
 
@@ -92,19 +102,62 @@ Question 5.
 
 Is this relationship different between men and women? Choose an appropriate plot and interpret your findings.
 
+This graph shows the relationship between student weight and backpack weight for male and female students.
+The relationship between the two variables is similar for men and for women, with both the body and backpack weight in this dataset lower for women than for men.
+
+```{r}
+ggplot(backpacks) +
+  aes(x = backpack_weight, y = body_weight, colour = sex) +
+  geom_smooth()  +
+  labs(
+      title = "Relationship between student and backpack weight",
+      subtitle = "subdivided by gender",
+      x = "Backpack Weight (pounds)",
+      y = "Average Weight of Carrier (pounds)"
+    )
+```
+
 Question 6.
 
 What proportion of students report back pain?
 
+number of students reporting back pain divided by total number of students * 100
+
+32 of our 100 students, or 32%, report experiencing back problems.
+
+```{r}
+backpacks %>% 
+  summarise(proportion_experiencing_backpain_as_a_percent = sum(back_problems) / n() * 100)
+
+```
+
+
 Question 7.
 
 Is this proportion different between men and women?
+
+Yes, 43% of the women report back pain compared to just under 18% of men.
+
+```{r}
+backpacks %>% 
+  group_by(sex) %>% 
+  summarise(proportion_experiencing_backpain_as_a_percent = sum(back_problems) / n() * 100)
+
+```
 
 Question 8.
 
 Now you’ve investigated your data separately, create plots to describe the relationship between backpack weight, body weight, gender and reported backpain.
 
 Try both backpack_weight and body_weight as well as the ratio.
+
+```{r}
+ggplot(backpack) +
+  aes(x = backpack_weight, y = body_weight) +
+  geom_smooth() +
+  facet_grid(sex ~ back_problems)
+```
+
 
 Hint: faceting would be useful here.
 
