@@ -62,8 +62,8 @@ The backpack weight for men trends slightly larger than womens and centres at 10
 
 ```{r}
 ggplot(backpacks) +
-  aes(x = backpack_weight, colour = sex) +
-  geom_density() +
+  aes(x = backpack_weight, colour = sex, fill = sex) +
+  geom_density(alpha = 0.5) +
   labs(
     title = "Frequency of backpack weights for each gender",
     y = "Frequency",
@@ -154,7 +154,7 @@ Try both backpack_weight and body_weight as well as the ratio.
 ```{r}
 ggplot(backpack) +
   aes(x = backpack_weight, y = body_weight) +
-  geom_smooth() +
+  geom_point() +
   facet_grid(sex ~ back_problems)
 ```
 
