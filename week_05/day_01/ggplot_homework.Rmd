@@ -152,7 +152,9 @@ Now you’ve investigated your data separately, create plots to describe the rel
 Try both backpack_weight and body_weight as well as the ratio.
 
 ```{r}
-ggplot(backpack) +
+backpack %>% 
+  mutate(back_problems = if_else(back_problems == 1, "Reported back pain", "No reported back pain")) %>% 
+ggplot() +
   aes(x = backpack_weight, y = body_weight) +
   geom_point() +
   facet_grid(sex ~ back_problems)
