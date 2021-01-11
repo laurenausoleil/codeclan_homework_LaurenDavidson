@@ -1,0 +1,179 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(prob)
+library(gtools)
+library(tidyverse)
+```
+
+```{r}
+# Get and modify data
+survival <- read_csv("data/titanic.csv") %>% 
+  select(class, survived) %>% 
+# Assign passengers to class passenger and everything else to class crew
+  mutate(class = 
+           case_when(
+    class == "1st" ~ "passenger",
+    class == "2nd" ~ "passenger",
+    class == "3rd" ~ "passenger",
+    TRUE ~ "crew"
+          )
+  )
+```
+
+```{r}
+# number crew
+num_crew <- survival %>% 
+  dplyr::filter(class == "crew") %>% 
+  nrow()
+
+# number surviving crew
+num_survive_crew <-
+  survival %>% 
+  dplyr::filter(class == "crew" & survived == "yes") %>% 
+  nrow()
+
+# prob crew survival
+prob_crew_survival <- num_survive_crew / num_crew
+```
+
+Crew survival is 0.237.
+
+
+```{r}
+# number crew
+num_pass <- survival %>% 
+  dplyr::filter(class == "passenger") %>% 
+  nrow()
+
+# number surviving crew
+num_survive_pass <-
+  survival %>% 
+  dplyr::filter(class == "passenger" & survived == "yes") %>% 
+  nrow()
+
+# prob crew survival
+prob_pas_survival <- num_survive_pass / num_pass
+```
+
+
+# 1: MVP 2
+How many outcomes are there in the sample space of an experiment in which we toss three dice?
+
+216
+```{r}
+library(prob)
+
+s_three_die <- rolldie(3)
+
+nrow(s_three_die)
+```
+
+# 2: MVP 3
+In an experiment where we roll four dice:
+
+```{r}
+s_four_die <- rolldie(4)
+```
+
+
+how many outcomes are in the event total_equals_5_6_7 (i.e. the total of the four dice equals 5, 6 or 7)?
+34
+```{r}
+s_four_die <- s_four_die %>% 
+  mutate(total = X1 + X2 + X3 + X4)
+
+s_four_die_equals_5_6_7 <-
+  s_four_die %>% 
+  dplyr::filter(total == 5 | total == 6 | total == 7)
+
+nrow(s_four_die_equals_5_6_7)
+```
+
+
+what is the probability of this event?
+
+0.02
+
+```{r}
+nrow(s_four_die_equals_5_6_7) / nrow(s_four_die)
+```
+
+what assumptions do we apply in answering part ii?
+
+Don't know
+
+# 3: MVP 4
+4. Five chairs are placed in a row in a room, along with five people of differing height. The people sit down randomly on the chairs. What is the probability that they sit in order of decreasing height, left to right?
+
+0.008333333
+
+```{r}
+# n = 5, r = 5
+# s of they sit in order of decreasing height, left to right = 1
+
+1 / nrow(as_tibble(
+  permutations(n = 5, r = 5, v = 1:5, repeats.allowed = FALSE)
+))
+```
+
+# 4: MVP 7
+Eight patients: Alice, Bob, Carmen, Dinesh, Ella, Fergus, Gianna and Henry are waiting to see a doctor, but only five appointment slots are left today.
+
+```{r}
+patients <- c("Alice", "Bob", "Carmen", "Dinesh", "Ella", "Fergus", "Gianna", "Henry")
+```
+
+
+In how many different orders can the doctor see patients today?
+6720
+
+```{r}
+patient_order_perm <- as_tibble(
+  permutations(n = length(patients), r = 5, v = patients, repeats.allowed = F)
+)
+
+nrow(patient_order_perm)
+```
+
+What is the probability of Gianna and Danesh both being seen today?
+0.3571429
+
+```{r}
+patient_order_perm <- patient_order_perm %>% 
+  mutate(patients_seen = paste(V1, V2, V3, V4, V5))
+
+# doesn't work
+g_and_d <- patient_order_perm %>% 
+  dplyr::filter(patients_seen %in% "Gianna" &
+                patients_seen %in% "Dinesh")
+
+d_and_g <- patient_order_perm %>% 
+  dplyr::filter(
+    (
+      (V1 == "Gianna") |
+      (V2 == "Gianna") |
+      (V3 == "Gianna") |
+      (V4 == "Gianna") |
+      (V5 == "Gianna")
+    ) &
+    (
+      (V1 == "Dinesh") |
+      (V2 == "Dinesh") |
+      (V3 == "Dinesh") |
+      (V4 == "Dinesh") |
+      (V5 == "Dinesh")
+    )  
+  )
+
+nrow(d_and_g) / nrow(patient_order_perm)
+```
+
+
+What is the probability of Gianna being seen before Dinesh today?
+
+
+(harder) Carmen and Henry have now been triaged as high priority and will be seen in the first two available slots, although their order hasn’t yet been determined. In how many different orders can the patients now be seen?
