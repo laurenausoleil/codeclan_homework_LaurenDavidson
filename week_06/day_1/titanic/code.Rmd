@@ -24,6 +24,25 @@ survival <- read_csv("data/titanic.csv") %>%
   )
 ```
 
+
+```{r}
+survival <- read_csv("data/titanic.csv") %>% 
+  select(class, survived)
+```
+
+```{r}
+# I had used case when, but I lost it so importing the solution from the homework solutions to let the code run
+
+survival <- survival %>% 
+  mutate(class = if_else(
+                class %in% c("engineering crew", "victualling crew", "restaurant staff", "deck crew"),
+                "crew", "passenger"
+                )
+  )
+```
+
+
+
 ```{r}
 # number crew
 num_crew <- survival %>% 
@@ -60,6 +79,19 @@ prob_pas_survival <- num_survive_pass / num_pass
 ```
 
 
+```{r}
+
+library(janitor)
+survival %>% 
+  tabyl(crew, survived) %>% 
+  adorn_totals(where = c("row", "col")) %>% 
+  adorn_percentages(denominator = "all") %>% 
+  adorn_rounding(digits = 4) %>% 
+  adorn_title()
+  
+```
+
+
 # 1: MVP 2
 How many outcomes are there in the sample space of an experiment in which we toss three dice?
 
@@ -75,22 +107,30 @@ nrow(s_three_die)
 # 2: MVP 3
 In an experiment where we roll four dice:
 
-```{r}
-s_four_die <- rolldie(4)
-```
-
-
 how many outcomes are in the event total_equals_5_6_7 (i.e. the total of the four dice equals 5, 6 or 7)?
 34
 ```{r}
-s_four_die <- s_four_die %>% 
-  mutate(total = X1 + X2 + X3 + X4)
+s_four_die <- rolldie(4) %>% 
+  mutate(total = rowSums(.))
 
 s_four_die_equals_5_6_7 <-
   s_four_die %>% 
   dplyr::filter(total == 5 | total == 6 | total == 7)
 
 nrow(s_four_die_equals_5_6_7)
+```
+
+```{r}
+S <- rolldie(4)
+
+# add total random variable
+S <- S %>%
+  mutate(total = rowSums(.))
+
+S_total_between_5_7 <- S %>%
+  filter(total %in% c(5, 6, 7))
+
+nrow(S_total_between_5_7)
 ```
 
 
@@ -148,7 +188,7 @@ patient_order_perm <- patient_order_perm %>%
 
 # doesn't work
 g_and_d <- patient_order_perm %>% 
-  dplyr::filter(patients_seen %in% "Gianna" &
+  dplyr::filter("Gianna" %in% patients_seen &
                 patients_seen %in% "Dinesh")
 
 d_and_g <- patient_order_perm %>% 
@@ -172,8 +212,26 @@ d_and_g <- patient_order_perm %>%
 nrow(d_and_g) / nrow(patient_order_perm)
 ```
 
+```{r}
+solution_d_g <-
+  patient_order_perm %>% 
+  dplyr::filter(isin(., c("Gianna", "Dinesh"), ordered = FALSE))
+
+nrow(solution_d_g) / nrow(patient_order_perm)
+```
+
 
 What is the probability of Gianna being seen before Dinesh today?
 
+```{r}
+solution_d_g_ordered <-
+  patient_order_perm %>% 
+  dplyr::filter(isin(., c("Gianna", "Dinesh"), ordered = TRUE))
+
+nrow(solution_d_g_ordered) / nrow(patient_order_perm)
+```
+
+
 
 (harder) Carmen and Henry have now been triaged as high priority and will be seen in the first two available slots, although their order hasn’t yet been determined. In how many different orders can the patients now be seen?
+
