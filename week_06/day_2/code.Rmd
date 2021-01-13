@@ -86,13 +86,32 @@ top_brand <- phones %>%
 For your top brand, plot the distribution of phone ratings as a probability density, overlaying a fitted normal distribution. Do you think the normal distribution provides a good model of these ratings?
 
 ```{r}
-phones %>% 
-  filter(brand == top_brand) %>% 
-  
+top_brand_phone <- phones %>% 
+  filter(brand == top_brand)
+
+top_brand_phone_stats <- top_brand_phone %>% 
+  summarise(n = n(),
+            mean = mean(rating),
+            sd = sd(rating))
+
+top_brand_phone %>% 
+ # mutate(binned = cut(rating, breaks = 25)) %>% 
+  filter(total_reviews > 2) %>% 
+  ggplot() +
+  aes(x = rating) +
+  geom_histogram(aes(y = ..density..), col = "white", bins = 25) +
+#  geom_smooth(aes(y = ..density..), col = "dark red") +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = top_brand_phone_stats$mean, 
+      sd = top_brand_phone_stats$sd
+    ),
+    col = "steel blue"
+  )
 ```
-
-
-[Hint - you will need to calculate the mean() and sd() of the ratings to plot the appropriate normal. Alternatively, investigate using the fitdistr() function in the MASS package]
+Our data fits fairly well to a normal distribution curve, skewe left and with outliers at ratings of 1 and 5, which can be removed by filtering for phones which have less than 2 reviews (where a rating of 1 or 5 is possible based on only one person's opinion).
+Ratings peak around 3.7 whereas our mean is around 3.5.
 
 
 
