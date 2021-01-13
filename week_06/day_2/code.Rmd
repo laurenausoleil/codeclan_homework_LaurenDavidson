@@ -39,6 +39,13 @@ phones %>%
 139 of our 792 observations have less than five ratings.
 
 ```{r}
+# How many phones have less than 2 ratings?
+phones %>% 
+  filter(total_reviews < 2)
+```
+63 have less than 2 ratings.
+
+```{r}
 # are there any repeat models in the data?
 length(unique(phones$asin))
 ```
