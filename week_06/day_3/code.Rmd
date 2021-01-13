@@ -1,0 +1,114 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# 1 Introduction
+In this lab we’re going to draw multiple samples from a population, calculate a bootstrapped 95% CI for each, and then see how often the population parameter lies within the CI. Hopefully this will help you to understand what we mean by ‘confidence’:
+
+‘If we draw 1000 repeated samples from a population, and form a 95% CI for each for a parameter estimate, then, on average, we are confident that approximately 950 CIs will contain the true population parameter, and approximately 50 will not. This is what we will try to show below.’
+
+As in the earlier lab on sampling, do remember that this is something of a ‘fake’ situation, and we are doing this just for educational purposes. Normally, we would have a single sample drawn from a population, and a single CI created from that sample at whatever confidence level we like.
+
+We would not be able to repeatedly sample the population in the way that we will below.
+
+# 2 MVP
+## We are going to use a dataset on house sales in Ames, Iowa over a number of years. We will be interested in the SalePrice of houses (though we should clean_names() the data, so this will end up as sale_price). Load the data and explore it.
+
+```{r}
+library(infer)
+library(tidyverse)
+library(janitor)
+library(scales)
+
+house_sales <- read_csv("data/ames.csv") %>%  clean_names() %>% 
+  select(neighborhood, year_built, yr_sold, sale_type, sale_condition, sale_price)
+```
+
+Many NAs in columns for optional features - alley, pool, etc. Houses built 1872 - 2010 and remodelled latest 2010. sold 2006-2010.
+
+## Plot a histogram of sale_price. Is the distribution normal?
+
+```{r}
+house_sales %>% 
+  ggplot()+
+  aes(x = sale_price) +
+  geom_histogram(col = "white", fill = "steel blue", alpha = 0.8) +
+  scale_x_continuous(labels = scales::dollar)
+```
+Fairly normal, right skewed, steeper curve on lower prices than for high, suggesting some outliers in the high prices.
+
+
+## Calculate the population parameter mean of sale_price. Store it in a variable, as we’ll need this value later when we check if each CI contains the parameter value or not.
+
+```{r}
+pop_mean <- house_sales %>% 
+  summarise(mean_hp = mean(sale_price)) %>% 
+  pull(mean_hp)
+```
+
+
+Now we are going to:
+take 1000 random samples each of size 100 from sale_price in ames
+create a boostrap sampling distribution of mean(sale_price) from each 100-observation sample (use 1000 reps)
+calculate the 95% CI for each bootstrap distribution
+store the upper and lower bounds of the CI in a tibble called results
+Use the infer workflow to generate the bootstrap distributions and CIs. This code will be pretty hard to write. Think about wrapping the sample creation and infer code in a for loop to generate 1000 random samples and CIs. Create an empty results tibble before the loop, and bind_rows() to it every time you generate a new set of CI bounds.
+
+```{r}
+
+result <- tibble()
+
+for(sample_num in 1:1000) {
+  
+  this_ci <- house_sales %>% 
+    rep_sample_n(size = 100, replace = F, reps = 1) %>% 
+    specify(response = sale_price) %>% 
+    generate(reps = 1000, type = "bootstrap") %>% 
+    calculate(stat = "mean") %>% 
+    get_ci()
+  
+  this_result <- c(sample_num = sample_num,
+                   lower_bound = this_ci$lower_ci,
+                   upper_bound = this_ci$upper_ci
+                   )
+  
+  result <- result %>% 
+    bind_rows(this_result)
+}
+
+```
+
+Pipe results to mutate() to add a new variable popn_param_in_ci which will be TRUE if the population parameter we calculated earlier is between lower and upper, and FALSE otherwise.
+[Hint if you stored your parameter in a tibble earlier (e.g. as the result of a summarise() pipe), extract it here as a numeric before you compare with upper and lower]
+
+```{r}
+result <- result %>% 
+  mutate(popn_param_in_ci = if_else(
+    lower_bound < pop_mean & upper_bound > pop_mean,
+    TRUE,
+    FALSE)
+  )
+```
+
+Perform an appropriate summarise() to determine the proportion of CIs that contain the population parameter. Our confidence level was 95% (equivalent to a proportion of 0.95). Is your proportion close to that value?
+
+```{r}
+result %>% 
+  summarise(prop_cis_cont_param = mean(popn_param_in_ci == TRUE))
+```
+
+## Have a think about what all this means, make a list of any points you don’t understand.
+
+I started with an imaginary population of 2930 houses.
+I drew 1000 samples from the population.
+For each of these samples, I bootstrapped 1000 samples and calculated a confidence interval with a confidence level of 95%.
+Each CI tells me that in 95% of the samples I draw from my population, my parameter will lie on this interval.
+i.e. the confidence interval I have calculated from this one sample, will contain the point estimate for 95% of the samples I could have drawn for the population. By extension, that it is a pretty good guess that the population parameter will fall on this interval.
+The code we ran here shows that my calculated CIs contained the actual population parameter in 93.9% of instances.
+
+
+## Imagine you had only a single 100-observation sample of the ames data (say from a 100 house survey).
+Would you know ahead of time whether the CI for mean(sale_price) from your particular sample contains the correct population parameter or not?
+
+No. I could only know whther my CI was correct for the population by comparing it to the population data. I would have a high confidence in it though, assuming that I didn't have any sample bias
