@@ -99,7 +99,19 @@ result %>%
   summarise(prop_cis_cont_param = mean(popn_param_in_ci == TRUE))
 ```
 
+
+
 ## Have a think about what all this means, make a list of any points you don’t understand.
+```{r}
+# Max confidence level
+house_sales %>% 
+    rep_sample_n(size = 100, replace = F, reps = 1) %>% 
+    ungroup() %>% 
+    specify(response = sale_price) %>% 
+    generate(reps = 1000, type = "bootstrap") %>% 
+    calculate(stat = "mean") %>% 
+    get_ci(level = 0.9999999999999999, type = "percentile")
+```
 
 I started with an imaginary population of 2930 houses.
 I drew 1000 samples from the population.
