@@ -63,10 +63,11 @@ for(sample_num in 1:1000) {
   
   this_ci <- house_sales %>% 
     rep_sample_n(size = 100, replace = F, reps = 1) %>% 
+    ungroup() %>% 
     specify(response = sale_price) %>% 
     generate(reps = 1000, type = "bootstrap") %>% 
     calculate(stat = "mean") %>% 
-    get_ci()
+    get_ci(level = 0.95, type = "percentile")
   
   this_result <- c(sample_num = sample_num,
                    lower_bound = this_ci$lower_ci,
@@ -103,8 +104,8 @@ result %>%
 I started with an imaginary population of 2930 houses.
 I drew 1000 samples from the population.
 For each of these samples, I bootstrapped 1000 samples and calculated a confidence interval with a confidence level of 95%.
-Each CI tells me that in 95% of the samples I draw from my population, my parameter will lie on this interval.
-i.e. the confidence interval I have calculated from this one sample, will contain the point estimate for 95% of the samples I could have drawn for the population. By extension, that it is a pretty good guess that the population parameter will fall on this interval.
+Each CI tells me that in 95% of the samples I could draw from my population, my parameter will lie on this interval. If I did this 100 times, I would get it right 95 times, so there is a 95% chance I I have got it right on this occasion.
+By extension, that it is a pretty good guess that the population parameter will fall on this interval.
 The code we ran here shows that my calculated CIs contained the actual population parameter in 93.9% of instances.
 
 
