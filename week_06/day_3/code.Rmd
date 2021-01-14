@@ -36,8 +36,9 @@ house_sales %>%
   geom_histogram(col = "white", fill = "steel blue", alpha = 0.8) +
   scale_x_continuous(labels = scales::dollar)
 ```
-Fairly normal, right skewed, steeper curve on lower prices than for high, suggesting some outliers in the high prices.
+My ans: Fairly normal, right skewed, steeper curve on lower prices than for high, suggesting some outliers in the high prices.
 
+Actual ans: Not normal, significant right skew with no centre. i.e. the peak is not the median.
 
 ## Calculate the population parameter mean of sale_price. Store it in a variable, as we’ll need this value later when we check if each CI contains the parameter value or not.
 
