@@ -87,7 +87,7 @@ Pipe results to mutate() to add a new variable popn_param_in_ci which will be TR
 ```{r}
 result <- result %>% 
   mutate(popn_param_in_ci = if_else(
-    lower_bound < pop_mean & upper_bound > pop_mean,
+    lower_bound <= pop_mean & upper_bound >= pop_mean,
     TRUE,
     FALSE)
   )
@@ -116,13 +116,13 @@ house_sales %>%
 
 I started with an imaginary population of 2930 houses.
 I drew 1000 samples from the population.
-For each of these samples, I bootstrapped 1000 samples and calculated a confidence interval with a confidence level of 95%.
-Each CI tells me that in 95% of the samples I could draw from my population, my parameter will lie on this interval. If I did this 100 times, I would get it right 95 times, so there is a 95% chance I I have got it right on this occasion.
+For each of these 1000 samples, I bootstrapped 1000 samples and calculated a confidence interval with a confidence level of 95%.
+I stored this CI in a table called results.
+Each CI tells me that in 95% of the samples I could draw from my population, my parameter will lie on this interval. If I did this 100 times, I would get it right 95 times, so there is a 95% chance I have got it right on this occasion.
 By extension, that it is a pretty good guess that the population parameter will fall on this interval.
 The code we ran here shows that my calculated CIs contained the actual population parameter in 93.9% of instances.
 
 
-## Imagine you had only a single 100-observation sample of the ames data (say from a 100 house survey).
-Would you know ahead of time whether the CI for mean(sale_price) from your particular sample contains the correct population parameter or not?
+## Imagine you had only a single 100-observation sample of the ames data (say from a 100 house survey). Would you know ahead of time whether the CI for mean(sale_price) from your particular sample contains the correct population parameter or not?
 
-No. I could only know whther my CI was correct for the population by comparing it to the population data. I would have a high confidence in it though, assuming that I didn't have any sample bias
+No. I could only know whether my CI was correct for the population by comparing it to the population data. I would have a high confidence in it though, assuming that I didn't have any sample bias. i would have a 95% chance of being right.
