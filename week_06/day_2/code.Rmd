@@ -125,3 +125,19 @@ Ratings peak around 3.7 whereas our mean is around 3.5.
 1.4 Question 4
 We can be more quantitative in comparing the distribution of top brand ratings with a normal distribution. You calculated the mean() and sd() of your distribution in an earlier question. Use these values to calculate the proportions of ratings within one-, two- and three standard deviations of the mean. Compare these proportions with those you expect for a normal distribution.
 
+```{r}
+top_brand_phone %>% 
+  mutate(
+    diff_from_mean = top_brand_phone_stats$mean - rating,
+    num_sds = diff_from_mean / top_brand_phone_stats$sd, 
+    neat_num_sds = case_when(
+      between(num_sds, -1, 1) ~ 1,
+      between(num_sds, -2, 2) ~ 2,
+      between(num_sds, -3, 3) ~ 3
+    )
+  )%>% 
+  group_by(neat_num_sds) %>% 
+  summarise(prop = n() / nrow(top_brand_phone))
+```
+
+
