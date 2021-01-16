@@ -16,10 +16,12 @@ shinyServer(function(input, output) {
     output$sales <- renderPlot({
         
     })
+    
 # reviews plot
     output$reviews <- renderPlot({
         
     })
+    
 # numbers plot
     output$numbers <- renderPlot(
         sales %>% 

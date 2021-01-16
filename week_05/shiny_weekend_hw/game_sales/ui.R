@@ -4,8 +4,6 @@
 # a plot of critic and user reviews over time showing where critics agree and disagree, we can then filter by genre, publisher and console of interest
 library(shiny)
 
-
-
 shinyUI(fluidPage(
     sidebarLayout(
         
@@ -30,7 +28,7 @@ shinyUI(fluidPage(
 # Highest rated title ever (combine user and critic)
             wellPanel(
                 top_rated
-            ),
+            )
 # end sidebar panel    
         ),
 
@@ -39,29 +37,38 @@ shinyUI(fluidPage(
 # row one - dropdowns
             fluidRow(
 # genre dropdown
-                selectInput(
-                    inputId = 'genre',
-                    label = "Genre",
-                    choices = list_genre,
-                    multiple = T,
-                    selected = list_genre
+                multiInput(inputId = "genre", 
+                           label = "Genre", 
+                           choices = list_genre, 
+                           selected = ,
+                           options = list(
+                               enable_search = FALSE,
+                               non_selected_header = "Options",
+                               selected_header = "Selected"
+                           )
                 ),
 # platform dropdown
-                selectInput(
-                    inputId = "platform",
-                    label = "Platform",
-                    choices = list_platform,
-                    multiple = T,
-                    selected = list_platform
+                multiInput(inputId = "platform", 
+                           label = "Platform", 
+                           choices = list_platform, 
+                           selected = ,
+                           options = list(
+                               enable_search = FALSE,
+                               non_selected_header = "Options",
+                               selected_header = "Selected"
+                           )
                 ),
 # publisher dropdown
-                selectInput(
-                    inputId = "publisher",
-                    label = "Publisher",
-                    choices = list_publisher,
-                    multiple = T,
-                    selected = list_publisher
-                ),
+                multiInput(inputId = "publisher", 
+                           label = "Publisher", 
+                           choices = list_publisher, 
+                           selected = ,
+                           options = list(
+                               enable_search = FALSE,
+                               non_selected_header = "Options",
+                               selected_header = "Selected"
+                           )
+                )
 # end row one     
             ),
             
