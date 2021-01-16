@@ -56,3 +56,9 @@ mean_reviews %>%
   
 ```
 
+```{r}
+sales %>% 
+  slice_max(order_by = sales, n = 1) %>% 
+  pull(name)
+```
+

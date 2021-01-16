@@ -13,23 +13,23 @@ shinyUI(fluidPage(
         sidebarPanel(
 # top seller
             wellPanel(
-                ...
+              top_seller
             ),
 # Total sales this year
             wellPanel(
-                ...
+                sales_2016
             ),
 # Most popular genre for critics
             wellPanel(
-                ...
+                top_genre_critics
             ),
 # Most popular genre for users
             wellPanel(
-                ...
+                top_genre_users
             ),
 # Highest rated title ever (combine user and critic)
             wellPanel(
-                ...
+                top_rated
             ),
 # end sidebar panel    
         ),
@@ -40,6 +40,7 @@ shinyUI(fluidPage(
             fluidRow(
 # genre dropdown
                 selectInput(
+                    inputId = 'genre',
                     label = "Genre",
                     choices = list_genre,
                     multiple = T,
@@ -47,6 +48,7 @@ shinyUI(fluidPage(
                 ),
 # platform dropdown
                 selectInput(
+                    inputId = "platform",
                     label = "Platform",
                     choices = list_platform,
                     multiple = T,
@@ -54,18 +56,37 @@ shinyUI(fluidPage(
                 ),
 # publisher dropdown
                 selectInput(
+                    inputId = "publisher",
                     label = "Publisher",
                     choices = list_publisher,
                     multiple = T,
                     selected = list_publisher
                 ),
-
-                
-            )
+# end row one     
+            ),
             
 # row two - 2 x graphs, 6 cols each
-            
+            fluidRow(
+# column one, graph sales
+                column(6,
+                    plotOutput("sales")
+                ),
+# column two, graph reviews
+                column(6,
+                    plotOutput("reviews")
+                )
+# end row two
+            ),
 # row three - plot of num games published each year - for visual more than info
+            fluidRow(
+                plotOutput("numbers",
+                           width = "300%",
+                           height = "100px")
+# end row three                
+            )
+# end main panel
         )
+# end sidebar layout
     )
+# end shinyUI and fluidpage
 ))
