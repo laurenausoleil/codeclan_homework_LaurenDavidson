@@ -3,6 +3,10 @@
 
 # a plot of critic and user reviews over time showing where critics agree and disagree, we can then filter by genre, publisher and console of interest
 library(shiny)
+library(here)
+library(shinyWidgets)
+
+source(here("global.R"))
 
 shinyUI(fluidPage(
     sidebarLayout(
@@ -11,23 +15,28 @@ shinyUI(fluidPage(
         sidebarPanel(
 # top seller
             wellPanel(
-              top_seller
+                tags$h5("Best Selling Game:"),
+                top_seller
+            ),
+# Highest rated title ever (combine user and critic)
+            wellPanel(
+                tags$h5("Highest rated game:"),
+                top_rated
             ),
 # Total sales this year
             wellPanel(
+                tags$h5("2016 sales to date:"),
                 sales_2016
             ),
 # Most popular genre for critics
             wellPanel(
+                tags$h5("Most popular genre with critics:"),
                 top_genre_critics
             ),
 # Most popular genre for users
             wellPanel(
+                tags$h5("Most popular genre with users:"),
                 top_genre_users
-            ),
-# Highest rated title ever (combine user and critic)
-            wellPanel(
-                top_rated
             )
 # end sidebar panel    
         ),
@@ -37,38 +46,41 @@ shinyUI(fluidPage(
 # row one - dropdowns
             fluidRow(
 # genre dropdown
+                column(4,
                 multiInput(inputId = "genre", 
                            label = "Genre", 
                            choices = list_genre, 
-                           selected = ,
+                           selected = "Action",
                            options = list(
                                enable_search = FALSE,
                                non_selected_header = "Options",
                                selected_header = "Selected"
                            )
-                ),
+                )),
 # platform dropdown
+                column(4,
                 multiInput(inputId = "platform", 
                            label = "Platform", 
                            choices = list_platform, 
-                           selected = ,
+                           selected = list_platform,
                            options = list(
                                enable_search = FALSE,
                                non_selected_header = "Options",
                                selected_header = "Selected"
                            )
-                ),
+                )),
 # publisher dropdown
+                column(4,
                 multiInput(inputId = "publisher", 
                            label = "Publisher", 
                            choices = list_publisher, 
-                           selected = ,
+                           selected = list_publisher,
                            options = list(
                                enable_search = FALSE,
                                non_selected_header = "Options",
                                selected_header = "Selected"
                            )
-                )
+                ))
 # end row one     
             ),
             
@@ -87,7 +99,7 @@ shinyUI(fluidPage(
 # row three - plot of num games published each year - for visual more than info
             fluidRow(
                 plotOutput("numbers",
-                           width = "300%",
+                           width = "100%",
                            height = "100px")
 # end row three                
             )
