@@ -2,34 +2,70 @@
 # a plot of sales by year, where we can filter by the genre, publisher and console of interest
 
 # a plot of critic and user reviews over time showing where critics agree and disagree, we can then filter by genre, publisher and console of interest
-
-# Total sales this year
-# Most popular genre for critics
-# Most popular genre for users
-# Highest rated title ever (combine user and critic)
-
-
 library(shiny)
 
-# Define UI for application that draws a histogram
+
+
 shinyUI(fluidPage(
-
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins
     sidebarLayout(
+        
+# Sidebar - top stats, 5 wellpanels
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+# top seller
+            wellPanel(
+                ...
+            ),
+# Total sales this year
+            wellPanel(
+                ...
+            ),
+# Most popular genre for critics
+            wellPanel(
+                ...
+            ),
+# Most popular genre for users
+            wellPanel(
+                ...
+            ),
+# Highest rated title ever (combine user and critic)
+            wellPanel(
+                ...
+            ),
+# end sidebar panel    
         ),
 
-        # Show a plot of the generated distribution
+# main panel - 3 rows
         mainPanel(
-            plotOutput("distPlot")
+# row one - dropdowns
+            fluidRow(
+# genre dropdown
+                selectInput(
+                    label = "Genre",
+                    choices = list_genre,
+                    multiple = T,
+                    selected = list_genre
+                ),
+# platform dropdown
+                selectInput(
+                    label = "Platform",
+                    choices = list_platform,
+                    multiple = T,
+                    selected = list_platform
+                ),
+# publisher dropdown
+                selectInput(
+                    label = "Publisher",
+                    choices = list_publisher,
+                    multiple = T,
+                    selected = list_publisher
+                ),
+
+                
+            )
+            
+# row two - 2 x graphs, 6 cols each
+            
+# row three - plot of num games published each year - for visual more than info
         )
     )
 ))
