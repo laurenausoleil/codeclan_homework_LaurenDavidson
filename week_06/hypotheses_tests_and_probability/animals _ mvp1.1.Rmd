@@ -1,0 +1,62 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+You work for an animal conservation organisation and are looking to do some investigating into some of the animals to provide evidence for some projects you are looking to run.
+
+In this homework we’ll use the msleep data set provided in the ggplot package. It concerns the sleeping patterns of various types of mammal.
+
+Explore the dataset and familiarise yourself with it.
+```{r}
+library(tidyverse)
+library(infer)
+data("msleep")
+```
+
+# 1. Jabberwockies sleep for around 7 hours a night, on average. Perform an appropriate statistical test to determine whether the mean sleep_total in the sampled population of animal types differs from the typical value for jabberwockies.
+
+H0: mu of total_sleep = 7 hours
+Ha: mu of total_sleep != 7 hours
+alpha = 0.05
+
+# Visualise
+```{r}
+msleep %>% 
+  ggplot() +
+  aes(x = sleep_total) +
+  geom_histogram(col = "white")
+```
+Calculate Observed Statistic
+```{r}
+mu_total_sleep <- msleep %>% 
+  summarise(mean_sleep = mean(sleep_total)) %>% pull(mean_sleep)
+```
+
+Generate null distribution
+```{r}
+sleep_null_dist <- msleep %>% 
+  specify(response = sleep_total) %>% 
+  hypothesise(null = "point", mu = 7) %>% 
+  generate(reps = 10000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+```
+
+Visualise Null distribution, mu and p value
+```{r}
+sleep_null_dist %>% 
+  visualise() +
+  shade_p_value(obs_stat = mu_total_sleep, direction = "both")
+```
+
+Calculate p value
+```{r}
+get_p_value(x = sleep_null_dist, obs_stat = mu_total_sleep, direction = "both")
+```
+## Conclusion
+We have a p value of close to 0, this is less than our alpha so we decide tp reject the null hypothesis and feel confident that the average sleep for the animals in this dataset differs significantly from the average sleep value for a jabberworcky of 7 hours.
+
+Perform an appropriate statistical test to determine whether omnivores sleep for significantly longer than herbivores, on average.
+
+Perform an appropriate statistical test to determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%.
+[Hint - think about creating an is_domesticated variable for the analysis]
