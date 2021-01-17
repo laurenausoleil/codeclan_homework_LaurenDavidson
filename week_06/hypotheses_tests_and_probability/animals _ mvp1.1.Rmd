@@ -56,7 +56,71 @@ get_p_value(x = sleep_null_dist, obs_stat = mu_total_sleep, direction = "both")
 ## Conclusion
 We have a p value of close to 0, this is less than our alpha so we decide tp reject the null hypothesis and feel confident that the average sleep for the animals in this dataset differs significantly from the average sleep value for a jabberworcky of 7 hours.
 
-Perform an appropriate statistical test to determine whether omnivores sleep for significantly longer than herbivores, on average.
+# 2. Perform an appropriate statistical test to determine whether omnivores sleep for significantly longer than herbivores, on average.
 
-Perform an appropriate statistical test to determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%.
+Design test
+H0: mu sleep_total_omni - mu_sleep_total_herbi = 0
+This hypothesises that there is no relationship between sleep length and vore
+Ha: mu sleep_total_omni - mu_sleep_total_herbi > 0
+This hypothesises that omnivores sleep for significantly longer than herbivores, as per our question
+alpha = 0.05
+
+Visualise
+```{r}
+vore_sleep <- msleep %>% 
+  filter(vore == c("herbi", "omni")) 
+
+vore_sleep %>% 
+  group_by(vore) %>% 
+  summarise(count = n(),
+            mean_sleep = mean(sleep_total)) %>% 
+  ggplot() +
+  aes(x = vore, y = mean_sleep, fill = vore) +
+  geom_col()
+```
+Observed difference in means
+```{r}
+diff_means_vore <- vore_sleep %>% 
+  specify(response = sleep_total, explanatory = vore) %>% 
+  calculate(stat = "diff in means", order = c("omni", "herbi"))
+```
+
+
+Null distribution using shuffle
+
+```{r}
+vore_null_dist <- vore_sleep %>% 
+  specify(response = sleep_total, explanatory = vore) %>% 
+  hypothesise(null = "independence") %>% 
+  generate(reps = 5000, type = "permute") %>% 
+  calculate(stat = "diff in means", order = c("omni", "herbi"))
+```
+
+Visualise null distribution and observation
+```{r}
+vore_null_dist %>% 
+  visualise(bins = 30) +
+  shade_p_value(obs_stat = diff_means_vore, direction = "greater")
+```
+Calculate p value
+```{r}
+get_p_value(vore_null_dist, obs_stat = diff_means_vore, direction = "greater")
+```
+
+Conclusion
+With a p value of 0.026, we can reject the null hypothesis and infer that omnivores have a significantly higher sleep total than herbivores.
+
+# 3. Perform an appropriate statistical test to determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%.
 [Hint - think about creating an is_domesticated variable for the analysis]
+
+Design test
+H0: proportion_domesticated_population = 0.05
+Ha: proportion_domesticated_population > 0.05
+alpha: 0.05
+
+Calculate proportion of domesticated animals in sample
+```{r}
+msleep %>% 
+  mutate(is_domesicated = case_when())
+```
+
