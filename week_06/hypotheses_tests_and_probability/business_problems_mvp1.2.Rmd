@@ -1,0 +1,87 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Hypothesis testing - interpretation
+
+For the following three business problems write out H0 and Ha in both mathematical notation and in words. Also state the method you would use to generate the null distribution (bootstrap, permutation or simulation).
+1.2.2 Interpreting the results
+For the 3 business problems stated above, imagine we performed you got the following p-values (with the given significance levels) write out your interpretation of the results.
+
+
+# Coffee
+You work for a independent coffee shop. The boss tells you that she thinks that around 40% of people in the town (population 30,000) know of the coffee shop, but you are skeptical of the estimate. You conduct a random survey of 200 people in the town, asking if respondents are aware of your coffee shop. You want to use the sample to test the hypothesis that 40% or more of the town’s population have heard of the coffee shop.
+
+Coffee shop problem. Significance level: 0.05, calculated p-value: 0.07
+
+H0: π population(aware) = 0.4
+Ha: π population(aware) > 0.4
+
+Null Hypothesis: 
+We assume that 40% or less of the population are aware of the coffee shop and set a null hypothesis value at a proportion of 0.4.
+Alternative Hypothesis: 
+We are testing for whether the number of people aware of the coffee shop is greater than 40%.
+
+Null distribution generation method: 
+simulate
+
+Results: 
+Significance level: 0.05, calculated p-value: 0.07
+
+Interpretation:
+We fail to reject our null hypothesis, our sample did not provide enough evidence to suggest that more than 40% of the population are aware of the coffee shop.
+
+# Website
+You work for a website design company and have performed an A/B test on the position of a banner on a website promoting a particular item.
+
+A/B testing A method comparing two versions of a web page, email, flyer or other marketing device against each other to determine which version performs better. As it is essentially a controlled experiment, the design should try to ensure that the groups experiencing both versions of the marketing device are equivalent and representative of the population.
+
+You selected five days at random last month and then randomly selected 200 of each sampled day’s users into group A and another 200 of that day’s users into group B. Group A continued to be shown the banner at the right hand side of the webpage (its usual position) while group B was shown the banner at the top of the page. You monitored each sampled user’s interactions with the website, in particular the ‘click through rate’ (CTR) on the banner, i.e. what proportion of sampled users clicked on the banner. 
+You want to use the sampled data to test the hypothesis that website users overall are more likely to click on the banner if positioned at the top of the page
+
+Website company problem. Significance level: 0.01, p-value: 0.006
+
+H0: μCTR(right) - μCTR(top) = 0
+Ha: μCTR(right) - μCTR(top) < 0
+
+Null Hypothesis:
+That the position of the banner has no effect. i.e. that the mean click through rate for the two positions will be the same.
+Alternative Hypothesis:
+That our new position, banner at the top, has a positive impact on click through rate. i.e. that the average click through rate with the banner at the top will be significantly higher than the average click through rate with the banner on the right
+
+Null distribution generation method:
+permute
+
+Results: 
+Significance level: 0.01, p-value: 0.006
+
+Interpretation:
+We have enough evidence from this sample to reject our null hypothesis at the desired confidence level. We infer that positioning the banner on the top of the page instead of the right has a significant impact on click through rate.
+
+# Cars
+
+You work as an analyst for a car manufacturing company - they have specific standards they must meet for standards and regulation purposes. You have been asked to check the quality control of the manufacture of a particular car part. You have been given data on a sample of 200 parts produced over the period of a week (the sampled parts were pulled at random from the production line and measured: the factory produced a lot more than 200 parts that week). The specification of the part stipulates a width of 145mm, and the manufacturing process is said to have ‘drifted’ if the mean width of parts differs significantly from 145mm. You want to use the sampled measurements to test whether the process overall has drifted.
+
+Manufacturing company problem. Significance level: 0.05, p-value: 0.55
+
+H0: μ part_width = 145
+Ha: μ part_width ≠ 145
+
+Null Hypothesis:
+There is no drift. Our mean width of parts is 145mm.
+Alternative Hypothesis:
+There is drift. The mean width of parts is not equal to 145mm
+
+Null distribution generation method:
+bootstrap
+
+Results:
+Significance level: 0.05, p-value: 0.55
+
+Interpretation:
+Our sample does not provide us with enough evidence to reject the null hypothesis.
+
+Thoughts: with a null hypothesis, we make the most conservative estimate. Therefors in this instance we should assume drift and test to prove no drift? I do not know how to formulate a null hypothesis which assumes drift though. Perhaps we could raise the significance level and investigate further if we get a p value of less than 0.1. 
+
+
