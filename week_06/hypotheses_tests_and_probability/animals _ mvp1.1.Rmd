@@ -120,7 +120,42 @@ alpha: 0.05
 
 Calculate proportion of domesticated animals in sample
 ```{r}
+msleep <- msleep %>% 
+  mutate(is_dom = if_else(
+    conservation == "domesticated",
+    "dom", "not_dom"
+  ))
+
+# Find number of NAs for conservation
 msleep %>% 
-  mutate(is_domesicated = case_when())
+  filter(is.na(is_dom))
+# 29 of 83 rows
+
+sample_prop_dom <- msleep %>% 
+# no effect  filter(!is.na(is_dom)) %>% 
+  specify(response = is_dom, success = "dom") %>% 
+  calculate(stat = "prop")
 ```
 
+Generate null distribution for H0
+```{r}
+null_dist_prop_animals <- msleep %>% 
+  specify(response = is_dom, success = "dom") %>% 
+  hypothesise(null = "point", p = 0.05) %>% 
+  generate(reps = 5000, type = "simulate") %>% 
+  calculate(stat = "prop")
+```
+
+Visualise null distribution, observed stat and p value
+```{r}
+null_dist_prop_animals %>% 
+  visualise(bins = 30) +
+  shade_p_value(obs_stat = sample_prop_dom, direction = "greater")
+```
+Get p value
+```{r}
+get_p_value(x = null_dist_prop_animals, obs_stat = sample_prop_dom, direction = "greater")
+```
+
+Conclusions
+We get a p value of close to 0, which allows us to reject the null hypothesis and infer that the percentage of domesticated animals in the population is greater than 5%
