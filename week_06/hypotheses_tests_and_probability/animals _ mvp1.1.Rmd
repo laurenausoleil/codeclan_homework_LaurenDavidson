@@ -68,7 +68,7 @@ alpha = 0.05
 Visualise
 ```{r}
 vore_sleep <- msleep %>% 
-  filter(vore == c("herbi", "omni")) 
+  filter(vore %in% c("herbi", "omni")) 
 
 vore_sleep %>% 
   group_by(vore) %>% 
@@ -92,7 +92,7 @@ Null distribution using shuffle
 vore_null_dist <- vore_sleep %>% 
   specify(response = sleep_total, explanatory = vore) %>% 
   hypothesise(null = "independence") %>% 
-  generate(reps = 5000, type = "permute") %>% 
+  generate(reps = 10000, type = "permute") %>% 
   calculate(stat = "diff in means", order = c("omni", "herbi"))
 ```
 
@@ -108,7 +108,7 @@ get_p_value(vore_null_dist, obs_stat = diff_means_vore, direction = "greater")
 ```
 
 Conclusion
-With a p value of 0.026, we can reject the null hypothesis and infer that omnivores have a significantly higher sleep total than herbivores.
+With a p value of 0.126, we fail to reject the null hypothesis, we do not have enough evidence to say that omnivores sleep for significantly longer than herbivores
 
 # 3. Perform an appropriate statistical test to determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%.
 [Hint - think about creating an is_domesticated variable for the analysis]
