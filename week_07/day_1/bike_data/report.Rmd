@@ -5,16 +5,10 @@ date: "18/01/2021"
 output: html_document
 ---
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 # Introduction to the data
-You may want to introduce the dataset in the beginning of the report and include some documentation as well as showing a consideration of data ethics (necessary for PDA presentation)
-
-A sample from NYC Citi Bike usage of 10 bikes throughout 2018. The data includes event data on
-each trip, including the trip’s start and end times and locations. The customer’s gender, birth year
-and bike usage type is also available.
-
 A dataset sourced from New York Citi Bikes made available via the open source Tsibble Data package.
 The dataset contains the rental information of 10 bikes throughout 2018.
 It is important to consider whether these journeys are representative of overall Citi bike usage. We know that the data has been processed to remove non-representative data such as rides taken by members of Citi Bike staff or 'false start' journeys lasting less than 60 seconds. If we assume that the 10 bikes have been selected at random, then tracking 10 of the Citi Bike's fleet of 15,000 bike should provide a useful cross-section of use. Though we might find that these bikes are not used evenly across the entire city as their location is dependent on customer usage. A larger sample would provide stronger evidence.
@@ -36,32 +30,33 @@ theme_set(theme_minimal())
 
 # Analysis Questions
 
-## What is the pattern of bike hires over time (e.g. within a year, month, week, or day)?
+#### What is the pattern of bike hires over time (e.g. within a year, month, week, or day)?
 
 ```{r}
 nyc_bikes <- nyc_bikes %>% 
   mutate(month = month(start_time, label = T),
          week = week(start_time),
-         day = day(start_time, label = T)
+         day = day(start_time)
          )
 ```
 ```{r}
 # Box plot by month
 nyc_bikes %>% 
   ggplot() +
-  geom_histogram(aes(x = month), bins = 12, stat = "count") +
+  geom_histogram(aes(x = month), bins = 12, stat = "count", fill = "steel blue") +
   labs(
     title = "2018 Bike use by month",
     x = "Month",
     y = "Number of rentals"
   )
 ```
+
 This plot shows us that bike usage rises during the summer months, peaking in August and declines in winter with bike usage at their lowest levels in December. We notice a possible spike in usage duing January which may be accounted for by New Year's resolutions.
 
 This information can be used by Citi Bikes to increase advertising in months where we see a decline in usage - February, November and Decembe.
 Citi Bikes could also consider how they can have the largest possible fleet active in May-August, by increasing bike maintenance during these months and scheduling maintenance which requires removal form the road during December.
 
-```{r}
+```{r include = FALSE}
 # Line graph by month
 nyc_bikes %>% 
   index_by(month) %>% 
@@ -76,7 +71,7 @@ nyc_bikes %>%
     y = "Number of rentals"
   )
 ```
-```{r}
+```{r include = FALSE}
 # Bike use by week
 nyc_bikes %>% 
   index_by(week) %>% 
@@ -99,7 +94,7 @@ nyc_bikes %>%
     y = "Count of usage"
   )
 ```
-```{r}
+```{r include = FALSE}
 # Bike use by week
 nyc_bikes %>% 
   ggplot() +
@@ -111,15 +106,15 @@ nyc_bikes %>%
     y = "Usage count"
   )
 ```
-## Do bike hire patterns differ between bike rider demographics? (e.g. gender, type of trip, age)
+#### Do bike hire patterns differ between bike rider demographics? (e.g. gender, type of trip, age)
 ```{r}
 # patterns: length of trip in time, length of trip in distance(difference lat + difference long), return = start, evening or day usage
 
 # demographics: gender, age, subscriber
 ```
 
-### Time of usage
-```{r}
+###### Time of usage
+```{r include = FALSE}
 # Time of usage compared to age of rider, gender, or subscription type - no patterns
 nyc_bikes %>% 
   mutate(time = hour(start_time)) %>% 
@@ -130,7 +125,9 @@ nyc_bikes %>%
   geom_point()
 ```
 
-### Trip length
+No relationship identified between start time and gender, age or subscription status.
+
+###### Trip length
 ```{r}
 nyc_bikes %>% 
   mutate(trip_length = stop_time - start_time) %>% 
@@ -145,6 +142,7 @@ nyc_bikes %>%
     x = "Birth year"
   )
 ```
+
 Does not indicate a relationship between age and trip length. Though it looks like the oldest and youngest users have the longest trip times.
 
 ```{r}
@@ -166,12 +164,13 @@ nyc_bikes %>%
     y = "Average trip length"
   )
 ```
+
 From this graph we see that people with unknown or undisclosed genders have a longer median journey time and that women have a slightly longer average trip than men.
 
-## Any other insights?
+#### Any other insights?
 
-### Proportion of users by gender, age and subscription status
-```{r}
+###### Proportion of users by gender, age and subscription status
+```{r include = FALSE}
 library(infer)
 nyc_bikes %>% 
   filter(!gender == "Unknown") %>% 
@@ -187,13 +186,14 @@ nyc_bikes %>%
   specify(response = under_30, success = "under_30") %>% 
   calculate(stat = "prop")
 ```
+
 77% of Citi Bike users with an available gender are male.
 92% of Citi Bike hires are conducted by subscribers.
 85% of Citi Bike users are under 30.
 
 
 
-### Journey start time
+###### Journey start time
 ```{r}
 nyc_bikes %>% 
   mutate(time = hour(start_time)) %>% 
@@ -208,12 +208,16 @@ nyc_bikes %>%
     y = "Count"
   )
 ```
+
 This graph shows us two peaks for the start time of journeys, at 8am and 6pm.
 
 Citi Bikes may want to consider running maintenance between midnight and 5am, when demand for bikes is lowest.
 They might also how to ensure coverage and availability at peak times, by running small repairs and redistributing bikes between 10am and 3pm.
 
-### Used and unused stations
+###### Used and unused stations
+```{r}
+# PDA: The visualisations must include geospatial and time series visualisations.
+```
 
 # Conclusions
 
