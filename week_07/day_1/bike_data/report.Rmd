@@ -1,0 +1,120 @@
+---
+title: "NYC Bike Analysis"
+author: "Lauren Davidson"
+date: "18/01/2021"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introduction to the data
+You may want to introduce the dataset in the beginning of the report and include some documentation as well as showing a consideration of data ethics (necessary for PDA presentation)
+
+A sample from NYC Citi Bike usage of 10 bikes throughout 2018. The data includes event data on
+each trip, including the trip’s start and end times and locations. The customer’s gender, birth year
+and bike usage type is also available.
+
+A dataset sourced from New York Citi Bikes made available via the open source Tsibble Data package.
+The dataset contains the rental information of 10 bikes throughout 2018.
+It is important to consider whether these journeys are representative of overall Citi bike usage. We know that the data has been processed to remove non-representative data such as rides taken by members of Citi Bike staff or 'false start' journeys lasting less than 60 seconds. If we assume that the 10 bikes have been selected at random, then tracking 10 of the Citi Bike's fleet of 15,000 bike should provide a useful cross-section of use. Though we might find that these bikes are not used evenly across the entire city as their location is dependent on customer usage. A larger sample would provide stronger evidence.
+While we have access to the start and end point of the journey and the customer's birth year and gender, we will not be able to identify individual users, so there is no concern about privacy. Indeed, attempting to identify individual users is prohibited under the Citi Bike Data License Agreement.
+
+```{r}
+library(tsibbledata)
+library(tsibble)
+library(tidyverse)
+library(lubridate)
+library(slider)
+nyc_bikes <- nyc_bikes
+theme_set(theme_minimal())
+# Zero=unknown; 1=male; 2=female
+```
+
+
+# Analysis Questions
+
+## What is the pattern of bike hires over time (e.g. within a year, month, week, or day)?
+
+```{r}
+nyc_bikes <- nyc_bikes %>% 
+  mutate(month = month(start_time, label = T),
+         week = week(start_time),
+         day = day(start_time, label = T)
+         )
+```
+```{r}
+# Box plot by month
+nyc_bikes %>% 
+  ggplot() +
+  geom_histogram(aes(x = month), bins = 12, stat = "count") +
+  labs(
+    title = "2018 Bike use by month",
+    x = "Month",
+    y = "Number of rentals"
+  )
+```
+```{r}
+# Line graph by month
+nyc_bikes %>% 
+  index_by(month) %>% 
+  summarise(monthly_usage = n()) %>% 
+  ggplot() +
+  aes(x = month, y = monthly_usage, group = 1) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "2018 Bike use by month",
+    x = "Month",
+    y = "Number of rentals"
+  )
+```
+```{r}
+# Bike use by week
+nyc_bikes %>% 
+  index_by(week) %>% 
+  summarise(count = n()) %>% 
+  mutate(
+    moving_count = slide_dbl(
+      count,
+      ~ mean(., na.rm = TRUE),
+      .before = 2,
+      .after = 2
+    )
+  ) %>% 
+  ggplot() +
+  aes(x = week, y = moving_count) +
+  geom_line() +
+  labs(
+    title = "2018 bike use by week",
+    subtitle = "Smoothed with 4 week average",
+    x = "Week of the year",
+    y = "Count of usage"
+  )
+```
+```{r}
+# Bike use by week
+nyc_bikes %>% 
+  ggplot() +
+  aes(x = week, stat = "count") +
+  geom_histogram(bins = 52, col = "white") +
+  labs(
+    title = "2018 bike use by week",
+    x = "Week of the year",
+    y = "Usage count"
+  )
+```
+
+
+Do bike hire patterns differ between bike rider demographics? (e.g. gender, type of trip, age)
+Any other insights?
+
+
+```{r cars}
+summary(cars)
+```
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
