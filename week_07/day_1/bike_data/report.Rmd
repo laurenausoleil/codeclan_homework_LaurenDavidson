@@ -20,11 +20,11 @@ library(tsibble)
 library(tidyverse)
 library(lubridate)
 library(slider)
+library(leaflet)
 
 nyc_bikes <- nyc_bikes %>% 
   filter(birth_year > 1900)
 theme_set(theme_minimal())
-# Zero=unknown; 1=male; 2=female
 ```
 
 
@@ -53,8 +53,13 @@ nyc_bikes %>%
 
 This plot shows us that bike usage rises during the summer months, peaking in August and declines in winter with bike usage at their lowest levels in December. We notice a possible spike in usage duing January which may be accounted for by New Year's resolutions.
 
-This information can be used by Citi Bikes to increase advertising in months where we see a decline in usage - February, November and Decembe.
+This information can be used by Citi Bikes to increase advertising in months where we see a decline in usage - February, November and December.
 Citi Bikes could also consider how they can have the largest possible fleet active in May-August, by increasing bike maintenance during these months and scheduling maintenance which requires removal form the road during December.
+
+```{r}
+# Weeks where usage declines
+```
+
 
 ```{r include = FALSE}
 # Line graph by month
@@ -125,7 +130,7 @@ nyc_bikes %>%
   geom_point()
 ```
 
-No relationship identified between start time and gender, age or subscription status.
+No relationship identified between start time and gender, start time and age or start time and subscription status.
 
 ###### Trip length
 ```{r}
@@ -159,32 +164,28 @@ nyc_bikes %>%
     x = "Gender",
     y = "Average trip length"
   )
-
-nyc_bikes %>% 
-  mutate(trip_length = stop_time - start_time) %>% 
-  mutate(gender_code = case_when(
-    gender == "Male" ~ 1,
-    gender == "Female" ~ 2,
-    gender == "Unknown" ~ 3
-  )) %>% 
-  index_by(gender_code) %>% 
-  summarise(avg_trip_length = median(trip_length)) %>% 
-  ggplot() +
-  aes(x = gender_code, y = avg_trip_length, fill = gender_code) + 
-  geom_col() +
-  labs(
-    title = "Average trip length by gender",
-    x = "Gender",
-    y = "Average trip length"
-  )
-
-# Check numbers of male, female and unknown gender
-# Change x labels
 ```
 
 From this graph we see that male users have a longer average journey time than women and undisclosed genders.
 
 From this and the user base being greater for men than for women, it seems that Citi Bike may want to invest time and research into why women are not using the Citi Bikes to the same extent as men. Are the bikes comfortable for women? Is the advertising or aesthetic of the bikes more attractive to men than to women?
+
+#### What is the geographical spread of the start points of bike hires?
+```{r}
+nyc_bikes %>% 
+  filter(hour(start_time) ==  8 | hour(start_time) == 18) %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addMarkers(lat = ~ start_lat,
+             lng = ~ start_long)
+```
+All of the rentals in our dataset which start at the peak times of 8am and 6pm start close to Jersey City and Hoboken.
+Note that this information may be an effect of the bicycles included in our sample rather than indicative of city wide usage.
+Upon confirmation of this pattern with additional data, Citi Bikes can use this information to ensure that they have bikes available in the right places. They might also consider advertising or testing new distribution in under-utilised areas such as Manhattan.
+
+#### Can you predict bike use over the next couple of months?
+
+
 
 #### Any other insights?
 
@@ -235,8 +236,6 @@ nyc_bikes %>%
 
 85% of Citi Bike users are under 30.
 
-
-
 ###### Journey start time
 ```{r}
 nyc_bikes %>% 
@@ -264,6 +263,10 @@ They might also how to ensure coverage and availability at peak times, by runnin
 ```
 
 ##### Are bikes getting even usage
+
+```{r}
+
+```
 
 
 # Conclusions
