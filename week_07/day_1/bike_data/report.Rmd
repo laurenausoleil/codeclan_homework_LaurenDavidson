@@ -21,6 +21,7 @@ library(tidyverse)
 library(lubridate)
 library(slider)
 library(leaflet)
+library(fable)
 
 nyc_bikes <- nyc_bikes %>% 
   filter(birth_year > 1900)
@@ -133,14 +134,14 @@ nyc_bikes %>%
 No relationship identified between start time and gender, start time and age or start time and subscription status.
 
 ###### Trip length
-```{r}
+```{r include = FALSE}
 nyc_bikes %>% 
   mutate(trip_length = stop_time - start_time) %>% 
   index_by(birth_year) %>% 
   summarise(avg_trip_length = median(trip_length)) %>% 
   ggplot() +
   aes(x = birth_year, y = avg_trip_length) %>% 
-  geom_point() +
+  geom_point(col = "steel blue") +
   labs(
     title = "Trip length by age",
     y = "Trip length",
@@ -148,10 +149,9 @@ nyc_bikes %>%
   )
 ```
 
-Does not indicate a relationship between age and trip length. Though it looks like the oldest and youngest users have the longest trip times.
+We do not see a clear relationship between age and trip length. Though it there is some indication that the oldest and youngest users have the longest trip times.
 
 ```{r}
-# edit to group by gender
 nyc_bikes %>% 
   mutate(trip_length = stop_time - start_time) %>% 
   group_by(gender) %>% 
@@ -179,45 +179,78 @@ nyc_bikes %>%
   addMarkers(lat = ~ start_lat,
              lng = ~ start_long)
 ```
-All of the rentals in our dataset which start at the peak times of 8am and 6pm start close to Jersey City and Hoboken.
+
+All of the rentals in our dataset which start at the peak hours, 8am and 6pm, are located  close to Jersey City.
 Note that this information may be an effect of the bicycles included in our sample rather than indicative of city wide usage.
-Upon confirmation of this pattern with additional data, Citi Bikes can use this information to ensure that they have bikes available in the right places. They might also consider advertising or testing new distribution in under-utilised areas such as Manhattan.
+
+If this pattern were confirmed with additional data, Citi Bikes could use this information to ensure that they have bikes available in the right places. They might also consider advertising or testing new distribution in under-utilised areas such as Manhattan.
 
 #### Can you predict bike use over the next couple of months?
 
 
+```{r include = FALSE}
+nyc_bikes_week <- nyc_bikes %>% 
+  index_by(week) %>% 
+  summarise(count = n())
+
+forecast_model <- nyc_bikes_week %>%
+  model(
+    snaive = SNAIVE(count),
+    arima = ARIMA(count)
+  )
+
+forecast <- forecast_model %>% 
+  fabletools::forecast(h = 8)
+
+forecast %>% 
+  autoplot(nyc_bikes_week) +
+  labs(
+    title = "2 months forecast of bike usage",
+    x = "Week"
+  )
+
+# make training set of 44 weeks observations
+training_set <- nyc_bikes_week %>% 
+  filter(week %in% 1:44)
+
+# make model for training set
+fit_training_set <- training_set %>% 
+  model(
+    arima = ARIMA(count),
+    snaive = SNAIVE(count)
+  )
+
+# use training set model to forecast 8 weeks
+test_forecast <- fit_training_set %>% 
+  fabletools::forecast(h = 8)
+
+# plot test forecast and test data
+test_forecast %>%
+  autoplot(nyc_bikes_week) +
+    autolayer(filter_index(nyc_bikes_week, "45" ~ .), color = "black")
+
+# check accuracy
+fabletools::accuracy(test_forecast, nyc_bikes_week)
+```
+
+While we do not have enough data available to calculate future usage in any useful format, it would seem likely that Citi Bike usage will follow a similar pattern in 2019 as it did in 2018 so we would expect to see bike usage increase over the next 2 months.
+
 
 #### Any other insights?
 
-###### Proportion of users by gender, age and subscription status
+##### Proportion of users by gender, age and subscription status
 ```{r include = FALSE}
 library(infer)
 prop_male_users <- nyc_bikes %>% 
   filter(!gender == "Unknown") %>% 
   specify(response = gender, success = "Male") %>% 
   calculate(stat = "prop")
-# observe 0.7
-
-# H0: prop_male_users_popn = 0.7
-# Ha: prop_male_users_popn > 0.7
-# alpha: 0.05
-
-null_dist_male_users <- nyc_bikes %>% 
-  filter(!gender == "Unknown") %>% 
-  specify(response = gender, success = "Male") %>% 
-  hypothesise(null = "point", p = 0.7) %>% 
-  generate(reps = 5000, type = "simulate") %>% 
-  calculate(stat = "prop")
-
-p_value_male_users <- get_p_value(null_dist_male_users, obs_stat = prop_male_users, direction = "greater")
-# p value 0
-
 ```
 
-77% of Citi Bike users with an available gender are male.
-A statistical test of whether the proportion of male users in the population is greater than 50% indicated that the proportion of male Citi Bike users is significantly greater than 70%.
-For the past few years, New York has had a slightly higher percentage of women than men, which suggests that Citi Bikes is missing out on potential riders.
-Citi Bikes may increase hire numbers by targetting more female customers.
+In our sample, 77% of users with a disclosed gender are male.
+
+In New York City, at least 50% of the population is female, so this number suggests that Citi Bikes are missing out on a potential customer base.
+I recommend testing this by collecting a further sample as Citi Bikes may increase hire numbers by targetting female customers.
 
 ```{r include = FALSE}
 nyc_bikes %>% 
@@ -236,7 +269,7 @@ nyc_bikes %>%
 
 85% of Citi Bike users are under 30.
 
-###### Journey start time
+##### Journey start time
 ```{r}
 nyc_bikes %>% 
   mutate(time = hour(start_time)) %>% 
@@ -257,7 +290,7 @@ This graph shows us two peaks for the start time of journeys, at 8am and 6pm.
 Citi Bikes may want to consider running maintenance between midnight and 5am, when demand for bikes is lowest.
 They might also how to ensure coverage and availability at peak times, by running small repairs and redistributing bikes between 10am and 3pm.
 
-###### Used and unused stations
+##### Used and unused stations
 ```{r}
 # PDA: The visualisations must include geospatial and time series visualisations.
 ```
@@ -274,3 +307,5 @@ They might also how to ensure coverage and availability at peak times, by runnin
 Peak demand for bikes is from May to August annually, and at 8am and 6pm daily. Citi Bikes may increase bike hire levels by ensuring that there is sufficient availability and coverage during peak times and encouraging additional use during off-peak times through promotions or advertising.
 
 As Citi Bikes have less female customers than male customers and the women have shorter journey lengths than men, Citi Bikes may benefit from research into the comfort of their bikes for women and the attractiveness of their branding towards women.
+
+Citi Bikes may like to conduct further research into the start position of bike rides at epak time to ensure availability in key areas and to identify areas of the city with lower suage levels, who may benefit from targetted advertising or a rethink of station layout.
