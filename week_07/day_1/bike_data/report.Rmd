@@ -146,6 +146,20 @@ nyc_bikes %>%
 Does not indicate a relationship between age and trip length. Though it looks like the oldest and youngest users have the longest trip times.
 
 ```{r}
+# edit to group by gender
+nyc_bikes %>% 
+  mutate(trip_length = stop_time - start_time) %>% 
+  group_by(gender) %>% 
+  summarise(avg_trip_length = median(trip_length)) %>% 
+  ggplot() +
+  aes(x = gender, y = avg_trip_length, fill = gender) + 
+  geom_col() +
+  labs(
+    title = "Average trip length by gender",
+    x = "Gender",
+    y = "Average trip length"
+  )
+
 nyc_bikes %>% 
   mutate(trip_length = stop_time - start_time) %>% 
   mutate(gender_code = case_when(
@@ -163,32 +177,62 @@ nyc_bikes %>%
     x = "Gender",
     y = "Average trip length"
   )
+
+# Check numbers of male, female and unknown gender
+# Change x labels
 ```
 
-From this graph we see that people with unknown or undisclosed genders have a longer median journey time and that women have a slightly longer average trip than men.
+From this graph we see that male users have a longer average journey time than women and undisclosed genders.
+
+From this and the user base being greater for men than for women, it seems that Citi Bike may want to invest time and research into why women are not using the Citi Bikes to the same extent as men. Are the bikes comfortable for women? Is the advertising or aesthetic of the bikes more attractive to men than to women?
 
 #### Any other insights?
 
 ###### Proportion of users by gender, age and subscription status
 ```{r include = FALSE}
 library(infer)
-nyc_bikes %>% 
+prop_male_users <- nyc_bikes %>% 
   filter(!gender == "Unknown") %>% 
   specify(response = gender, success = "Male") %>% 
   calculate(stat = "prop")
+# observe 0.7
 
+# H0: prop_male_users_popn = 0.7
+# Ha: prop_male_users_popn > 0.7
+# alpha: 0.05
+
+null_dist_male_users <- nyc_bikes %>% 
+  filter(!gender == "Unknown") %>% 
+  specify(response = gender, success = "Male") %>% 
+  hypothesise(null = "point", p = 0.7) %>% 
+  generate(reps = 5000, type = "simulate") %>% 
+  calculate(stat = "prop")
+
+p_value_male_users <- get_p_value(null_dist_male_users, obs_stat = prop_male_users, direction = "greater")
+# p value 0
+
+```
+
+77% of Citi Bike users with an available gender are male.
+A statistical test of whether the proportion of male users in the population is greater than 50% indicated that the proportion of male Citi Bike users is significantly greater than 70%.
+For the past few years, New York has had a slightly higher percentage of women than men, which suggests that Citi Bikes is missing out on potential riders.
+Citi Bikes may increase hire numbers by targetting more female customers.
+
+```{r include = FALSE}
 nyc_bikes %>% 
   specify(response = type, success = "Subscriber") %>% 
   calculate(stat = "prop")
+```
 
+92% of Citi Bike hires are conducted by subscribers.
+
+```{r include = FALSE}
 nyc_bikes %>% 
   mutate(under_30 = if_else(birth_year < 1990, "under_30", "over_30")) %>% 
   specify(response = under_30, success = "under_30") %>% 
   calculate(stat = "prop")
 ```
 
-77% of Citi Bike users with an available gender are male.
-92% of Citi Bike hires are conducted by subscribers.
 85% of Citi Bike users are under 30.
 
 
@@ -219,8 +263,11 @@ They might also how to ensure coverage and availability at peak times, by runnin
 # PDA: The visualisations must include geospatial and time series visualisations.
 ```
 
+##### Are bikes getting even usage
+
+
 # Conclusions
 
 Peak demand for bikes is from May to August annually, and at 8am and 6pm daily. Citi Bikes may increase bike hire levels by ensuring that there is sufficient availability and coverage during peak times and encouraging additional use during off-peak times through promotions or advertising.
 
-Citi Bike is missing out on the Female and over 30 markets.
+As Citi Bikes have less female customers than male customers and the women have shorter journey lengths than men, Citi Bikes may benefit from research into the comfort of their bikes for women and the attractiveness of their branding towards women.
