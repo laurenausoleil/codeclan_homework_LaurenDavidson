@@ -290,15 +290,9 @@ This graph shows us two peaks for the start time of journeys, at 8am and 6pm.
 Citi Bikes may want to consider running maintenance between midnight and 5am, when demand for bikes is lowest.
 They might also how to ensure coverage and availability at peak times, by running small repairs and redistributing bikes between 10am and 3pm.
 
-##### Used and unused stations
-```{r}
-# PDA: The visualisations must include geospatial and time series visualisations.
-```
 
+```{r}
 ##### Are bikes getting even usage
-
-```{r}
-
 ```
 
 
