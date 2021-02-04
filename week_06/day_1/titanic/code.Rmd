@@ -82,7 +82,7 @@ prob_pas_survival <- num_survive_pass / num_pass
 ```{r}
 
 library(janitor)
-survival %>% 
+# survival %>% 
   tabyl(crew, survived) %>% 
   adorn_totals(where = c("row", "col")) %>% 
   adorn_percentages(denominator = "all") %>% 
@@ -191,6 +191,9 @@ g_and_d <- patient_order_perm %>%
   dplyr::filter("Gianna" %in% patients_seen &
                 patients_seen %in% "Dinesh")
 
+g_and_d <- patient_order_perm %>% 
+  dplyr::filter(isin(patients_seen, c("Gianna", "Dinesh")))
+
 d_and_g <- patient_order_perm %>% 
   dplyr::filter(
     (
@@ -234,4 +237,34 @@ nrow(solution_d_g_ordered) / nrow(patient_order_perm)
 
 
 (harder) Carmen and Henry have now been triaged as high priority and will be seen in the first two available slots, although their order hasn’t yet been determined. In how many different orders can the patients now be seen?
+240
+
+```{r}
+patient_order_perm %>% 
+  filter(
+    (V1 == "Carmen" | V1 == "Henry") &
+    (V2 == "Carmen" | V2 == "Henry")
+  ) %>% 
+  dim()
+```
+
+# 5: MVP 8 and 9
+
+8. If order is not significant, how many ways are there to select a 5 student quiz team from a group of 8 students?
+56
+
+```{r}
+combinations(n = 8, r = 5, repeats.allowed = F) %>% 
+  dim()
+```
+
+9. (harder) How would your answer for question 8 change if a team captain had to be selected for each team?
+280
+
+```{r}
+combinations(n = 7, r = 4, repeats.allowed = F) %>% 
+  dim() * 8
+```
+
+
 

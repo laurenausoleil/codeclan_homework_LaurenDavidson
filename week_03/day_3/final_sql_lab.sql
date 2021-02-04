@@ -42,7 +42,7 @@ LIMIT 1;
 
 SELECT *
 FROM employees
-WHERE email LIKE '%@yahoo%';
+WHERE email ILIKE '%@yahoo%';
 
 -- Q6
 /* Provide a breakdown of the numbers of employees enrolled, not enrolled, and with unknown enrollment status 

@@ -15,8 +15,8 @@ You work for a independent coffee shop. The boss tells you that she thinks that 
 
 Coffee shop problem. Significance level: 0.05, calculated p-value: 0.07
 
-H0: π population(aware) = 0.4
-Ha: π population(aware) > 0.4
+H0: π awareness = 0.4
+Ha: π awareness > 0.4
 
 Null Hypothesis: 
 We assume that 40% or less of the population are aware of the coffee shop and set a null hypothesis value at a proportion of 0.4.
@@ -41,6 +41,8 @@ You selected five days at random last month and then randomly selected 200 of ea
 You want to use the sampled data to test the hypothesis that website users overall are more likely to click on the banner if positioned at the top of the page
 
 Website company problem. Significance level: 0.01, p-value: 0.006
+
+## note that question asked for proportion not mean -whoops!
 
 H0: μCTR(right) - μCTR(top) = 0
 Ha: μCTR(right) - μCTR(top) < 0
@@ -82,6 +84,6 @@ Significance level: 0.05, p-value: 0.55
 Interpretation:
 Our sample does not provide us with enough evidence to reject the null hypothesis.
 
-Thoughts: with a null hypothesis, we make the most conservative estimate. Therefors in this instance we should assume drift and test to prove no drift? I do not know how to formulate a null hypothesis which assumes drift though. Perhaps we could raise the significance level and investigate further if we get a p value of less than 0.1. 
+Thoughts: with a null hypothesis, we make the most conservative estimate. Therefore in this instance we should assume drift and test to prove no drift? I do not know how to formulate a null hypothesis which assumes drift though. Perhaps we could raise the significance level and investigate further if we get a p value of less than 0.1. 
 
 
