@@ -5,10 +5,12 @@
 library(shiny)
 library(here)
 library(shinyWidgets)
+library(shinythemes)
 
 source(here("global.R"))
 
 shinyUI(fluidPage(
+    theme = shinytheme("darkly"),
     sidebarLayout(
         
 # Sidebar - top stats, 5 wellpanels
