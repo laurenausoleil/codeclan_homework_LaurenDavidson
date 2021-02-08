@@ -1,0 +1,81 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(infer)
+library(modelr)
+library(ggfortify)
+library(broom)
+```
+
+
+The file project_management.csv contains data sampled from the recent work schedule of a small construction company. Column estimated_length contains the estimated length of a building job in days, while column actual_length contains the actual recorded length of the job in days.
+
+We are interested in determining the accuracy of the job estimations made by the company using simple linear regression, so we will eventually want to run a simple linear regression using actual_length as the dependent variable, and estimated_length as the independent variable.
+
+# Load the data into a dataframe project
+```{r}
+job_length <- read_csv("data/project_management.csv") %>% clean_names()
+```
+
+# Plot the data, taking estimated_length as the independent variable and actual_length as the dependent variable.
+```{r}
+job_length %>% 
+  ggplot() +
+  aes(x = estimated_length, y = actual_length) +
+  geom_point()
+```
+
+# Calculate the correlation coefficient of estimated_length and actual_length and interpret the value you obtain.
+
+```{r}
+job_length %>% 
+  summarise(r = cor(estimated_length, actual_length))
+```
+An correlation coefficient of 0.8 indicates strong positive correlation.
+As estimatedtime increases, actual time increases.
+
+# Perform a simple linear regression using actual_length as the dependent variable, and estimated_length as the independent variable. Save the model object to a variable.
+
+```{r}
+job_model <- job_length %>% 
+  lm(formula = actual_length ~ estimated_length)
+```
+
+Interpret the regression coefficient of estimated_length (i.e. slope, gradient) you obtain from the model.
+```{r}
+job_model
+```
+We have a regression coefficient, or a slope of 1.223. This means for additional unit (guess days) of estimated job length, actual job length increases by 1.223 days.
+
+How do you interpret the r2 value reported by the model?
+```{r}
+glance_job_model <- glance(job_model) %>% clean_names()
+```
+An r squared value is a measure of how well our line fits the data.
+An r squared value of 0.6 suggests that more than half of the variance in actual_length can be predicted from estimated_length.
+
+# Is the relationship statistically significant? Remember, to assess this you need to check the p-value of the regression coefficient (or slope/gradient). But you should first check the regression diagnostic plots to see if the p-value will be reliable (don’t worry about any outlier points you see in the diagnostic plots, we’ll return to them in the extension).
+
+H0: p_value = 0,
+Ha: p_value != 0
+Alpha: 0.05
+
+```{r}
+autoplot(job_model)
+```
+Residual vs fitted measures the independence of our residuals. The line mostly stays around 0 so it looks like our residuals are independent.
+Normal q-q measures the normality of the residuals. Only our outliers sit far from this line, so it looks like our residuals are normal/
+Scale-location measures the constancy of variation. Our values, excluding outliers, sit between 0.25 and 1.25.
+Therefore we can be confident in our p value because our data fits a linear regression model.
+
+```{r}
+format(glance_job_model$p_value, scientific = FALSE)
+```
+
+Our p value is less than our aplha or 0.05, so we can reject the null hypothesis and accept that there is a statistically significant relationship between estimated_length and actual_length.
+We can further test this hypothesis using the bootstrapping method.
