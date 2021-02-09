@@ -1,0 +1,114 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r, warning = FALSE}
+library(tidyverse)
+library(janitor)
+library(mosaicData)
+library(mosaic)
+library(GGally)
+library(ggfortify)
+library(fastDummies)
+```
+
+# Load the diamonds.csv data set and undertake an initial exploration of the data. You will find a description of the meanings of the variables on the relevant Kaggle page
+```{r}
+diamonds <- read_csv("diamonds.csv")
+```
+https://www.kaggle.com/shivam2503/diamonds/
+x(mm) and y(mm) are measurements of size
+colour is a categorical ordinal variable with D as the worst and J as the best.
+cut is a categorical ordinal variable with Quality in increasing order Fair, Good, Very Good, Premium, Ideal
+Clarity (in order from best to worst, FL = flawless, I3= level 3 inclusions) FL,IF, VVS1, VVS2, VS1, VS2, SI1, SI2, I1, I2, I3
+
+# We expect the carat of the diamonds to be strong correlated with the physical dimensions x, y and z. Use ggpairs() to investigate correlations between these four variables.
+```{r}
+diamonds %>% 
+  ggpairs()
+```
+
+# So, we do find significant correlations. Let’s drop columns x, y and z from the dataset, in preparation to use only carat going forward.
+```{r}
+diamonds_clean <- diamonds %>% 
+  select(-c(x, y, z)) %>% 
+  mutate(
+    clarity = factor(clarity, levels = c("I3", "I2", "I1", "SI2", "SI1", "VS2", "VS1", "VVS2", "VVS1", "IF", "FL")),
+    color = factor(color, levels = c("D", "E", "F", "G", "H", "I", "J"))
+  ) 
+```
+
+
+# We are interested in developing a regression model for the price of a diamond in terms of the possible predictor variables in the dataset.
+
+# Use ggpairs() to investigate correlations between price and the predictors (this may take a while to run, don’t worry, make coffee or something).
+As seen above, price is strongly correlated with carat, and also with color. It varies significantly with clarity. It has some correlation with table, but as table is another measure of size, I will ignore it for now.
+
+# Perform further ggplot visualisations of any significant correlations you find.
+
+## Carat
+```{r}
+diamonds_clean %>% 
+  ggplot(aes(x = carat, y = price)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+Alone, this predictor will not give us good estimates for diamonds with carats > 3
+
+## Color
+```{r}
+diamonds_clean %>% 
+  ggplot(aes(x = color, y = price)) +
+  geom_boxplot()
+```
+Median price seems to increase with better color. Q1 and minimums stay fairly constant, with Q3 varying quite a bit by color.
+
+## Clarity
+```{r}
+diamonds_clean %>% 
+  ggplot(aes(x = clarity, y = price)) +
+  geom_boxplot()
+```
+We see a lot of variation by clarity which will be easier to interpret with the ordinal levels of the clarity.
+(in order from best to worst, FL = flawless, I3= level 3 inclusions) FL,IF, VVS1, VVS2, VS1, VS2, SI1, SI2, I1, I2, I3
+```{r}
+diamonds_clean %>% 
+  ggplot(aes(x = clarity, y = price)) +
+  geom_boxplot()
+```
+Medians generally decrease with improved clarity. It would be interesting to explore median and mode as our high clarity diaomnds have significant skew on their higher value tails.
+I also wonder if there is a relationship between size and clarity, I hypothesise that larger diamonds have more inclusions. This would account for the higher median price for diamonds with the lowest clarity.
+
+```{r}
+diamonds_clean %>% 
+  ggplot(aes(x = price, y = carat)) +
+  geom_point() +
+  facet_wrap(~ clarity)
+```
+Shows us that I1 diamonds, those with the lowest clarity, can also have the greatest carat.
+IF doesn't get bigger than 2.5. Our middle values, VS1 and VS2 go up to about 2.75 and I1 can go all the way to 5 carat.
+
+# Shortly we may try a regression fit using one or more of the categorical predictors cut, clarity and color, so let’s investigate these predictors:
+# Investigate the factor levels of these predictors. How many dummy variables do you expect for each of them?
+
+```{r}
+diamonds_clean %>% 
+  distinct(clarity)
+# 8 values -> expect 7 dummy variables.
+diamonds_clean %>% 
+  distinct(color)
+# 7 values -> expect 6 dummy variables.
+
+```
+
+# Use the dummy_cols() function in the fastDummies package to generate dummies for these predictors and check the number of dummies in each case.
+
+```{r}
+diamond_dummy <- diamonds_clean %>% 
+  dummy_cols(select_columns = c("clarity", "color"),
+             remove_most_frequent_dummy = TRUE,
+             remove_selected_columns = TRUE
+  )
+```
+
+
