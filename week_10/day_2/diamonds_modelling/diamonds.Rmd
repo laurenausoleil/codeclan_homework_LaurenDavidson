@@ -106,9 +106,64 @@ diamonds_clean %>%
 ```{r}
 diamond_dummy <- diamonds_clean %>% 
   dummy_cols(select_columns = c("clarity", "color"),
-             remove_most_frequent_dummy = TRUE,
+             remove_first_dummy = TRUE,
              remove_selected_columns = TRUE
   )
 ```
+
+```{r}
+a_model <- lm(price ~ carat, data = diamond_dummy)
+autoplot(a_model)
+summary(a_model)
+```
+
+Residual vs fitted: ok
+Q-Q: evidence of variation from something other than our predictor.
+Scale-location: heteroscadacity, something else is affecting our outcome.
+-> do not trust p-score
+
+```{r}
+b_model <- lm(price ~ carat + color, data = diamonds_clean)
+autoplot(b_model)
+summary(b_model)
+```
+No difference from model_a in diagnostic plots.
+Decreased standard error.
+Interesting that color E is not significant. I thought this was because it is the first variable and can therefore be predicted from the others, but colorD has been removed.
+```{r}
+c_model <- lm(price ~ carat + color + clarity:carat, data = diamonds_clean)
+autoplot(c_model)
+summary(c_model)
+```
+Reduces standard error by 400 to 1087.
+Increases R-squared.
+Now all tests are significant.
+
+```{r}
+diamonds_clean %>% 
+  ggplot(aes(y = price)) +
+  geom_boxplot()
+
+diamonds_clean %>% 
+  summarise(mean_price = mean(price),
+            mode_price = mode(price),
+            median_price = median(price))
+```
+
+```{r}
+d_model <- lm(price ~ carat + color + clarity, data = diamonds_clean)
+autoplot(d_model)
+summary(d_model)
+```
+Model is better when we look at clarity in relation to carat not alone.
+
+```{r}
+e_model <- lm(price ~ carat + color + color:carat + clarity, data = diamonds_clean)
+autoplot(e_model)
+summary(e_model)
+```
+Adding color:carat does not help.
+
+Stick with d_model
 
 
