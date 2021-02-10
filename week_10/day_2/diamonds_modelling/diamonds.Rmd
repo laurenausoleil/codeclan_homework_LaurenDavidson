@@ -5,8 +5,6 @@ output: html_notebook
 ```{r, warning = FALSE}
 library(tidyverse)
 library(janitor)
-library(mosaicData)
-library(mosaic)
 library(GGally)
 library(ggfortify)
 library(fastDummies)
@@ -28,6 +26,11 @@ diamonds %>%
   ggpairs()
 ```
 
+```{r}
+# More specific solution
+ggpairs(diamonds[,c("carat", "x", "y", "z")])
+```
+
 # So, we do find significant correlations. Let’s drop columns x, y and z from the dataset, in preparation to use only carat going forward.
 ```{r}
 diamonds_clean <- diamonds %>% 
@@ -40,9 +43,13 @@ diamonds_clean <- diamonds %>%
 
 
 # We are interested in developing a regression model for the price of a diamond in terms of the possible predictor variables in the dataset.
+```{r}
+diamonds %>% 
+  ggpairs()
+```
 
 # Use ggpairs() to investigate correlations between price and the predictors (this may take a while to run, don’t worry, make coffee or something).
-As seen above, price is strongly correlated with carat, and also with color. It varies significantly with clarity. It has some correlation with table, but as table is another measure of size, I will ignore it for now.
+As seen above, price is strongly correlated with carat, and also with color. It varies significantly with clarity and cut. It has some correlation with table, but as table is another measure of size, I will ignore it for now.
 
 # Perform further ggplot visualisations of any significant correlations you find.
 
@@ -156,6 +163,7 @@ autoplot(d_model)
 summary(d_model)
 ```
 Model is better when we look at clarity in relation to carat not alone.
+Stick with c_model.
 
 ```{r}
 e_model <- lm(price ~ carat + color + color:carat + clarity, data = diamonds_clean)
@@ -163,7 +171,13 @@ autoplot(e_model)
 summary(e_model)
 ```
 Adding color:carat does not help.
+Stick with c_model
 
-Stick with d_model
+```{r}
+f_model <- lm(price ~ carat + color + clarity:carat + cut, data = diamonds_clean)
+autoplot(f_model)
+summary(f_model)
+```
+Cut does not make a significant difference. Stick with model c.
 
 
