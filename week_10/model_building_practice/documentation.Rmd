@@ -1,0 +1,54 @@
+---
+title: "avocado_model_documentation"
+author: "Lauren Davidson"
+date: "14/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Variables available
+
+## X1
+*Discounted*- not relevant to average price
+
+## Date
+Adjusted to month and is_weekday column then *discounted* - not relevant to average price
+
+## *AveragePrice*
+Our *target variable*, as set by CodeClan brief (see brief.Rmd)
+
+## Total Volume
+*Discounted* - not relevant to average price
+
+## PLU codes - 4046, 4225 and 4770
+Considered, but neither forward nor exhaustive selection of variables by the leaps pakcage automated model builder identified PLU code as a useful indicator of avverage price -> *discounted*
+
+## Total Bags
+*Discounted* - not relevant to average price
+
+## Bag Size - Small Bags, Large Bags, XLarge Bags
+Considered, but neither forward nor exhaustive selection of variables by the leaps pakcage automated model builder identified bag size as a useful indicator of avverage price -> *discounted*
+
+## Type (organic or conventional)
+Identified by ggpairs, forward and exhaustive selection as a significant indicator. *Include*
+
+## Year
+Identified by ggpairs, forward and exhaustive selection as a significant indicator. *Consider for inclusion*
+Action: test with ANOVA
+
+## Region
+Region where sale was observed.
+Identified by forward and exhaustive selection as a potentially significant indicator. *Consider for inclusion*
+Action: test with ANOVA
+
+# Variables added
+
+## Month
+Identified by forward and exhaustive selection as a potentially significant indicator. *Consider for inclusion*
+Action: test with ANOVA
+
+## Is_weekday (1 if day is weekday, 0 if weekend)
+Identified by exhaustive selection as a potentially significant indicator, but correlation of -0.00705 with average_price and not included in forward selection so *discounted*
