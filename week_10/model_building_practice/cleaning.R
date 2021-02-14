@@ -16,8 +16,8 @@ avocado_price <- read_csv("data/avocado.csv") %>%
 avocado_price <- avocado_price %>% 
   # add date columns for possible analysis 
   mutate(
-    is_weekday = if_else(wday(ymd(date)) == 1:5, 1, 0),
-    month = month(ymd(date))
+    is_weekday = if_else(wday(ymd(date)) == 1:5, "yes", "no"),
+    month = month(ymd(date), label = TRUE)
   ) %>% 
 # drop unhelpful columns
 select(-c(x1, total_bags, date)) 

@@ -6,7 +6,7 @@ library(GGally)
 # Load Data
 avocado <- read_csv("data/clean_avocado.csv")
 
-# check for redundany variables
+# check for redundant variables
 alias(lm(average_price ~ ., data = avocado))
 
 # find variables with leaps forward selection
@@ -39,6 +39,28 @@ avocado %>%
 # Calculate correlation score for weekday
 avocado %>% 
   summarise(cor(average_price, is_weekday))
-    # none
+    # none - decision to discount LD 
+
+# Test Year, Region and Month
+mod_type <-  lm(average_price ~ type, data = avocado)
+mod_type_year <- lm(average_price ~ type + year, data = avocado)
+mod_type_region <- lm(average_price ~ type + region, data = avocado)
+mod_type_month <- lm(average_price ~ type + month, data = avocado)
+
+# Year
+summary(mod_type_year)
+anova(mod_type, mod_type_year)
+    # significant
+
+# Region
+anova(mod_type, mod_type_region)
+    # significant
+
+# Month
+summary(mod_type_month)
+anova(mod_type, mod_type_month)
+# significant
+
+
 
 

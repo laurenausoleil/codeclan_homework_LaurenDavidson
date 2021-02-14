@@ -51,4 +51,6 @@ Identified by forward and exhaustive selection as a potentially significant indi
 Action: test with ANOVA
 
 ## Is_weekday (1 if day is weekday, 0 if weekend)
-Identified by exhaustive selection as a potentially significant indicator, but correlation of -0.00705 with average_price and not included in forward selection so *discounted*
+Identified by exhaustive selection as a potentially significant indicator
+Action: test correlation.
+Correlation of -0.00705 with average_price and not included in forward selection so *discounted*
