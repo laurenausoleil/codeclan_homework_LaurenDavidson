@@ -1,0 +1,45 @@
+---
+title: "Model Validation"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(caret)
+```
+
+# Get data and best model
+```{r}
+avacado <- read_csv("data/clean_avocado.csv")
+
+model <- lm(average_price ~ type + region, data = avocado)
+```
+
+
+# K fold test
+
+Set 10 folds
+```{r}
+cv_10_fold <- trainControl(method = "cv", number = 10, savePredictions = TRUE)
+```
+
+Test model
+```{r}
+k_fold_test <- train(
+  average_price ~ type + region,
+  data = avacado,
+  trControl = cv_10_fold,
+  method = "lm"
+)
+```
+
+Residual score for the model
+```{r}
+mean(k_fold_test$resample$RMSE)
+```
+Average error of 0.271 across 10 folds
+
+```{r}
+mean(k_fold_test$resample$Rsquared)
+```
+Average R Sqaured of 0.54, our model predicts about 50% of the variance in average avocado price.

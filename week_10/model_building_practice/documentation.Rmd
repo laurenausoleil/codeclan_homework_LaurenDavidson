@@ -9,37 +9,43 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Variables available
+# Model predicting average sale price of an avocado using type (organic or conventional) and region of sale
+* Intended for use in US
+* Not tested with recent data
+* Predicts 50% of variance with a 27 cent error margin
+* Trained and tested with the same data using 10 fold cross validation
+* Year and month may be useful additional indicators not included in this model
+* Data dictionary available in data folder
 
+# Variables included in model
+
+* Type
+* Region
+
+# Model Performance
+Model can predict 50% of the variance in average price, with an average error of 27 cents.
+
+# Variables available
 ## X1
 *Discounted*- not relevant to average price
-
 ## Date
 Adjusted to month and is_weekday column then *discounted* - not relevant to average price
-
 ## *AveragePrice*
 Our *target variable*, as set by CodeClan brief (see brief.Rmd)
-
 ## Total Volume
 *Discounted* - not relevant to average price
-
 ## PLU codes - 4046, 4225 and 4770
 Considered, but neither forward nor exhaustive selection of variables by the leaps pakcage automated model builder identified PLU code as a useful indicator of avverage price -> *discounted*
-
 ## Total Bags
 *Discounted* - not relevant to average price
-
 ## Bag Size - Small Bags, Large Bags, XLarge Bags
 Considered, but neither forward nor exhaustive selection of variables by the leaps pakcage automated model builder identified bag size as a useful indicator of avverage price -> *discounted*
-
 ## Type (organic or conventional)
 Identified by ggpairs, forward and exhaustive selection as a significant indicator. *Include*
-
 ## Year
 Identified by ggpairs, forward and exhaustive selection as a significant indicator. *Consider for inclusion*
 Action: test with ANOVA
 *Currently broken*
-
 ## Region
 Region where sale was observed.
 Identified by forward and exhaustive selection as a potentially significant indicator. *Consider for inclusion*
@@ -47,14 +53,15 @@ Action: test with ANOVA
 Result: significant impact on R squared and ANOVA shows statistical significance. *Included in model*
 
 # Variables added
-
 ## Month
 Identified by forward and exhaustive selection as a potentially significant indicator. *Consider for inclusion*
 Action: test with ANOVA
 *Currently broken*
-
 ## Is_weekday (1 if day is weekday, 0 if weekend)
 Identified by exhaustive selection as a potentially significant indicator
 Action: test correlation.
 Correlation of -0.00705 with average_price and not included in forward selection so *discounted*
 *Currently broken*
+
+# Developer
+Developed by Lauren Davidson, trainee data analyst at CodeClan in Feb 2021 following a brief from CodeClan instructors.
