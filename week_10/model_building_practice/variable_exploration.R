@@ -4,10 +4,14 @@ library(leaps)
 library(GGally)
 
 # Load Data
-avocado <- read_csv("data/clean_avocado.csv")
+avocado <- read_csv("data/clean_avocado.csv") %>% 
+  select(-is_weekday)
 
 # check for redundant variables
 alias(lm(average_price ~ ., data = avocado))
+    # finding a dependency with is_weekday because it is broken so I have removed this above.
+
+
 
 # find variables with leaps forward selection
 leaps_model <- regsubsets(average_price ~ ., data = avocado, method = "forward")
@@ -19,6 +23,7 @@ plot(summary(leaps_model)$rsq, type = "b")
 # See which variables are included at the level with 8 variables
 summary(leaps_model)$which[8, ]
   # type, year, month, some regions
+  # year and month are currently not useful indicators as they are set as numerics
 
 
 # Find variables with leaps exhaustive selection
