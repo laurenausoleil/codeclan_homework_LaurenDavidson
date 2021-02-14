@@ -1,7 +1,7 @@
 library(tidyverse)
 library(modelr)
 library(leaps)
-library(GGally)
+library(ggfortify)
 
 # Load Data
 avocado <- read_csv("data/clean_avocado.csv") %>% 
@@ -10,8 +10,6 @@ avocado <- read_csv("data/clean_avocado.csv") %>%
 # check for redundant variables
 alias(lm(average_price ~ ., data = avocado))
     # finding a dependency with is_weekday because it is broken so I have removed this above.
-
-
 
 # find variables with leaps forward selection
 leaps_model <- regsubsets(average_price ~ ., data = avocado, method = "forward")
@@ -34,12 +32,12 @@ plot(summary(leaps_model_exh)$bic, type = "b")
 plot(summary(leaps_model_exh)$rsq, type = "b")
    # shows that adding predictors has an impact on R squared up to 8 variables
 summary(leaps_model_exh)$which[8, ]
-    # best model includes type, year, month, weekday and some regions
+    # best model includes type, year, month and some regions
 
 # Explore variables with ggally:ggpairs
 avocado %>%
-  ggpairs(columns = c("average_price", "type", "year", "month", "is_weekday"))
-  # weekday looks like low correlation, month has some, year has some and type looks most significant
+  ggpairs(columns = c("average_price", "type", "year", "month"))
+  # month has some correlation, year has some correlation and type looks most significant
 
 # Calculate correlation score for weekday
 avocado %>% 
@@ -55,17 +53,23 @@ mod_type_month <- lm(average_price ~ type + month, data = avocado)
 # Year
 summary(mod_type_year)
 anova(mod_type, mod_type_year)
-    # significant
+    # significant, R^2 of 0.388
 
 # Region
+summary(mod_type_region)
 anova(mod_type, mod_type_region)
-    # significant
+    # significant, R^2 of 0.55
 
 # Month
 summary(mod_type_month)
 anova(mod_type, mod_type_month)
-# significant
+  # significant, R^2 of 0.40
 
+best_model <- mod_type_region
+summary(best_model)
+autoplot(best_model)
+  # Showing some deviation in th q-q, but good enough to trust p-score.
 
+# Can't currently trust month or year due to formatting to leave model there for now.
 
 

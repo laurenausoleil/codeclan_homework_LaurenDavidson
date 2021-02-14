@@ -44,6 +44,7 @@ Action: test with ANOVA
 Region where sale was observed.
 Identified by forward and exhaustive selection as a potentially significant indicator. *Consider for inclusion*
 Action: test with ANOVA
+Result: significant impact on R squared and ANOVA shows statistical significance. *Included in model*
 
 # Variables added
 
