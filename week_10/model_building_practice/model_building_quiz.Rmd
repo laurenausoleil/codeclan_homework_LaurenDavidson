@@ -1,0 +1,74 @@
+---
+title: "Model Building Quiz"
+output: html_notebook
+---
+
+# Homework Quiz
+
+1. I want to predict how well 6 year-olds are going to do in their final school exams. Using the following variables am I likely under-fitting, fitting well or over-fitting? Postcode, gender, reading level, score in maths test, date of birth, family income.
+
+These seem like valid variables, whether this overfits or not would depend on whether we have a good range of data to train from and how significant each predictor is.
+
+2. If I have two models, one with an AIC score of 34,902 and the other with an AIC score of 33,559 which model should I use?
+
+You should take into account other measures like adjusted R squared and BIC, but from ths information alone, we would pick the model with the lowest score, 33,559.
+
+3. I have two models, the first with: r-squared: 0.44, adjusted r-squared: 0.43. The second with: r-squared: 0.47, adjusted r-squared: 0.41. Which one should I use?
+
+I would use the irst model. Although it has a lower R-squared i.e. the other model is doing a better job of explaining variance in the target model, it has a higher adjusted r squared, suggesting that some of the variables in the second model are not significant. Having too many predictors in your model can lead to overfitting and uses higher computation power.
+
+4. I have a model with the following errors: RMSE error on test set: 10.3, RMSE error on training data: 10.4. Do you think this model is over-fitting?
+
+No. It looks like the model is performing similarly on the test and training data, which is what we would hope for.
+
+5. How does k-fold validation work?
+
+It splites the dataset into a number of folds, often 10, then trains and tests the model 10 times leaving out each fold in turn as the test set. We can use the mean of errors and r-squared from these ten tests to get an idea of the models overall performance.
+
+6. What is a validation set? When do you need one?
+
+A validation set is a set of recent data, identical in structure to the development data, which is used to test the model prior to implementation and during on-going monitoring. It helps us to see whether there have been any population shifts since the model's development which deprecate the model.
+
+7. Describe how backwards selection works.
+
+We start with a model containing all possible variables and remove the least significant variable one at a time.
+
+8. Describe how best subset selection works.
+
+For each size of model (number of variables included in the model), we compare all the possible subsets of the total variables to find the combination which has the highest predictive power at that model size.
+
+9. It is estimated on 5% of model projects end up being deployed. What actions can you take to maximise the likelihood of your model being deployed?
+
+Provide excellent documentation with clear parameters and instructions.
+Build or export your model in a format that fits into its operational environment.
+Ensure that you have understood and met the operational context of your model throughout development.
+Make sure your model meets are regulations i.e. that it does not include protecte characteristics.
+
+10. What metric could you use to confirm that the recent population is similar to the development population?
+
+
+
+11. How is the Population Stability Index defined? What does this mean in words?
+
+
+
+12. Above what PSI value might we need to start to consider rebuilding or recalibrating the model
+
+
+
+13. What are the common errors that can crop up when implementing a model?
+
+Using a protected characteristic.
+
+14. After performance monitoring, if we find that the discrimination is still satisfactory but the accuracy has deteriorated, what is the recommended action?
+
+If doing on-going development, understand the shift then adjust the model.
+In single train, we would note this in the documentation along with recommendations ready to make improvements when the model is recalibrated.
+
+15. Why is it important to have a unique model identifier for each model?
+
+So we can keep the model documentation up to date.
+
+16. Why is it important to document the modelling rationale and approach?
+
+To ensure explainability and transparency of the model. Basically to avoid black box solutions. So that the model can be understood, maintained and monitored by different people, not just the developer.
