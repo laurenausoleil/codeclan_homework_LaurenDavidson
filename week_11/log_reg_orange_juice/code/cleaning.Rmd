@@ -1,0 +1,65 @@
+library(tidyverse)
+library(janitor)
+
+```{r}
+
+oj_data <- read_csv("data/orange_juice.csv") %>% 
+  clean_names()
+
+```
+
+
+# Exploration and Understanding
+
+Purchases of two brands of orange juice - target variable - and data on week of purchase, store, price of CH brand, price of MM brand, discount applied to either brand, whether each brand was on sale (equal to is there a value in discount), brand loyalty for CH (and not MM), sale price of each brand (equal to price less discount), difference in price (equal to sale price - sale price), store 7 factor (not helpful), difference in list price (equal to price_mm - price_ch), percentage discount for each brand (alias), store (alias storeid)
+
+
+# Remove aliases
+
+Note that removing speical will lose any indication of whether a promotional price affects sales, only retaining how the percentage discount affects sales.
+*Consider re-rerunning with special_ch and special_mm in place of pct_disc_ch and pct_disc_mm*
+
+```{r}
+oj_reduced_var_data <- oj_data %>% 
+  select(-c(
+  # Remove both price_, which is captured in sale price and percentage discount
+    price_ch, price_mm, 
+  # Remove both disc_, discount amounts, which is captured in percentage discount and sale price
+    disc_ch, disc_mm,
+  # Remove special, which is captured in percentage discount 
+    special_ch, special_mm,
+  # Remove price difference (derived from sale_price_)
+    price_diff,
+  # Remove store7 factor and store (contained in storeid)
+    store7, store
+  ))
+```
+
+
+# Convert variables to factors
+
+Time of purchase may be a predictor variable, for example if the brand has run advertising, or has had negative press coverage. The Data contains 51 weeks worth of observations, so I am choosing to convert this to a series of 12 periods which will give us a rough idea of month of purchase, although we will not know which months we are looking at and the seperations will not be equal.
+This will still give us an indication of whether date of purchase is a useful predictor and can inform future data collection.
+
+```{r}
+oj_reduced_var_data_factored <- oj_reduced_var_data %>% 
+  mutate(
+    purchase_ch = as_factor(if_else(purchase == "CH", 1, 0)),
+    month_of_purchase = cut(weekof_purchase, breaks = 12, labels = 1:12),
+    loyal_ch = as.numeric(format(round(loyal_ch, 1), nsmall = 1))
+  ) %>% 
+  select(-c(purchase, weekof_purchase)) %>% 
+  mutate(across(where(is_numeric), as_factor))
+```
+
+# Check for aliases
+```{r}
+# don't run, lot's of printout.
+# alias(purchase_ch ~ ., data = oj_reduced_var_data_factored)
+```
+
+# Write clean data
+```{r}
+write_csv(oj_reduced_var_data_factored, "../data/clean_oj.csv")
+```
+
