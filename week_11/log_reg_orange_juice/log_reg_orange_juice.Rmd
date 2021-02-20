@@ -1,0 +1,12 @@
+1 MVP
+You have been provided with a set of data on customer purchases of either ‘Citrus Hill’ (purchase = 'CH') or ‘Minute Maid’ (purchase = 'MM') orange juice, together with some further attributes of both the customer and the store of purchase. A data dictionary is also provided in the data directory.
+
+We would like you to build the best predictive classifier you can of whether a customer is likely to buy Citrus Hill or Minute Maid juice. Use logistic regression to do this. You should use either train-test splitting or cross-validation to evaluate your classifier. The metric for ‘best classifier’ will be highest AUC value either in the test set (for train-test splitting) or from cross-validation.
+
+Issues we faced, thoughts we had
+
+This is quite a tough, open-ended exercise. We decided early on to use an automated approach to model selection using glmulti(), but feel free to use a manual approach if you prefer!
+The Purchase dependent variable will require wrangling to work in logistic regression. We replaced it with a purchase_mm logical variable.
+Wrangle other categorical variables to be factors too.
+WeekOfPurchase is also quite tough to deal with: should it be added as a factor variable (it will lead to many coefficients), left as numeric, or omitted entirely? See if you can come up with a strategy to decide what to do with it.
+Check for aliased variables and remove any aliases before you set off to find your best models. Remember, you can use something like alias(purchase_mm ~ ., data = oj) to do this, the dot . here means ‘all variables’. Aliased variables will be listed down the left-hand side, and you can subsequently remove them.
