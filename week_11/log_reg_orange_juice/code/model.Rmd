@@ -1,0 +1,109 @@
+
+```{r}
+library(caret)
+library(glmulti)
+library(tidyverse)
+```
+# Load in clean data and refactor the numeric variables
+```{r}
+oj_data <- read_csv("../data/clean_oj.csv") %>% 
+  mutate(across(where(is_numeric), as_factor))
+```
+
+
+# Create train and test datasets.
+```{r}
+train_index <- createDataPartition(
+  oj_data$purchase_ch, 
+  p = 0.85, 
+  list = FALSE, 
+  times = 1)
+
+training_data <- oj_data[train_index, ]
+test_data <- oj_data[-train_index, ]
+```
+
+Check purchases in training and test set are comparable
+   Both sets have similar distribution of purchases.
+```{r}
+ggplot(training_data) +
+  aes(x = purchase_ch) +
+  geom_bar()
+
+ggplot(test_data) +
+  aes(x = purchase_ch) +
+  geom_bar()
+```
+
+# Predictor selection for model
+
+Check size of request to glmulti 
+
+```{r}
+glmulit_fit <- glmulti(
+  # include all variables
+  purchase_ch ~ .,
+  # include interactions between variables
+  data = training_data,
+  level = 2,
+  maxsize = 10,
+  marginality = TRUE,
+  # set trial run
+  method = "d",
+  confsetsize = 500,
+  plotty = FALSE,
+  report = TRUE,
+  fitfunction = "glm",
+  family = binomial(link = "logit"),
+  # measure models on AIC as requested in brief
+  crit = "aic"
+)
+
+summary(glmulit_fit)
+```
+107972 possible models. Should be possible in about 10-15 minutes.
+
+```{r}
+glmulit_fit <- glmulti(
+  # include all variables
+  purchase_ch ~ .,
+  # include interactions between variables
+  data = training_data,
+  level = 2,
+  maxsize = 10,
+  marginality = TRUE,
+  # use algorithm method
+  method = "g",
+  confsetsize = 10,
+  plotty = FALSE,
+  report = TRUE,
+  fitfunction = "glm",
+  family = binomial(link = "logit"),
+  # measure models on AIC as requested in brief
+  crit = "aic"
+)
+
+summary(glmulit_fit)
+```
+
+After 90 generations:
+Best model: purchase_ch~1+store_id+loyal_ch+pct_disc_ch+list_price_diff
+Crit= 731.641583088339
+Mean crit= 739.62794186827
+Change in best IC: 0 / Change in mean IC: -1.09340887670089
+
+# Build best model
+```{r}
+model <- glm(purchase_ch ~ , 
+             data = training_data, 
+             method = "lm", family = binomial(link = "logit"))
+```
+
+
+# Test model on test_data
+
+```{r}
+predictions <- predict(model, test_data)
+
+predictions - test_data$purchase_ch
+```
